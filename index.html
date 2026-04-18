@@ -8,8 +8,9 @@
 <title>InternPulse Admin — YSH</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
+
 :root{
   --teal:#079897;--teal-deep:#045f5e;--teal-mid:#0ab8b7;
   --teal-glow:rgba(7,152,151,0.18);--teal-pale:#e8f8f8;
@@ -254,11 +255,10 @@ body{font-family:"Outfit",sans-serif;background:var(--bg);color:var(--ink);min-h
 .empty-art{font-size:3rem;margin-bottom:12px;opacity:0.4;}
 .dpdp-footer{text-align:center;font-size:0.58rem;color:var(--mist);padding:12px 0 4px;border-top:1px solid var(--border);margin-top:8px;line-height:1.8;}
 .dpdp-footer a{color:var(--teal);}
+
 </style>
 </head>
 <body>
-
-<!-- LOGIN SCREEN -->
 <div id="login-wrap" class="login-wrap">
   <div class="login-card">
     <div class="login-logo-row">
@@ -277,8 +277,7 @@ body{font-family:"Outfit",sans-serif;background:var(--bg);color:var(--ink);min-h
   <div class="login-footer">NABH Accredited · DPDP Act 2023 Compliant · InternPulse v1.0</div>
 </div>
 
-<!-- APP SHELL -->
-<div id="app-shell">
+<div id="app-shell" style="display:none;">
   <div class="topbar" style="position:relative;">
     <div class="topbar-pattern"></div>
     <div class="topbar-left">
@@ -292,8 +291,6 @@ body{font-family:"Outfit",sans-serif;background:var(--bg);color:var(--ink);min-h
       <button class="icon-btn" onclick="doLogout()" title="Logout">⏻</button>
     </div>
   </div>
-
-  <!-- HOME -->
   <div id="screen-home" class="screen active">
     <div class="hero">
       <div class="hero-greet">Welcome back, Coordinator</div>
@@ -311,143 +308,53 @@ body{font-family:"Outfit",sans-serif;background:var(--bg);color:var(--ink);min-h
     <div class="chip-row" id="location-chips"></div>
     <div id="intern-list"></div>
   </div>
-
-  <!-- ADD INTERN -->
   <div id="screen-add" class="screen">
     <div class="sec-title" style="margin-bottom:4px;">Register Intern</div>
     <div style="font-size:0.73rem;color:var(--mist);margin-bottom:14px;">Manual registration by coordinator</div>
     <div class="form-sec">Academic Details</div>
     <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="f-name" placeholder="Full name"/></div>
     <div class="form-group"><label class="form-label">College *</label><input class="form-input" id="f-college" placeholder="Institution name"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Department</label><input class="form-input" id="f-dept" placeholder="e.g. ENT"/></div>
-      <div class="form-group"><label class="form-label">Academic Year</label><input class="form-input" id="f-year" placeholder="e.g. 3rd MBBS"/></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="f-phone" type="tel"/></div>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" type="email"/></div>
-    </div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Department</label><input class="form-input" id="f-dept"/></div><div class="form-group"><label class="form-label">Academic Year</label><input class="form-input" id="f-year"/></div></div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="f-phone" type="tel"/></div><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="f-email" type="email"/></div></div>
     <div class="form-sec">Posting & Mentor</div>
-    <div class="form-group"><label class="form-label">Posting Location</label><input class="form-input" id="f-location" placeholder="e.g. ENT OPD"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" id="f-start"/></div>
-      <div class="form-group"><label class="form-label">End Date</label><input class="form-input" type="date" id="f-end"/></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Mentor Name</label><input class="form-input" id="f-mentor"/></div>
-      <div class="form-group"><label class="form-label">Designation</label><input class="form-input" id="f-mdesig"/></div>
-    </div>
+    <div class="form-group"><label class="form-label">Posting Location</label><input class="form-input" id="f-location"/></div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" id="f-start"/></div><div class="form-group"><label class="form-label">End Date</label><input class="form-input" type="date" id="f-end"/></div></div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Mentor Name</label><input class="form-input" id="f-mentor"/></div><div class="form-group"><label class="form-label">Designation</label><input class="form-input" id="f-mdesig"/></div></div>
     <div class="form-sec">Objective</div>
     <div class="form-group"><textarea class="form-textarea" id="f-objective" placeholder="Learning goals…"></textarea></div>
     <button class="btn btn-primary" id="submit-btn" onclick="submitIntern()">✦ Register Intern</button>
     <div style="height:10px;"></div>
   </div>
-
-  <!-- MENTORS -->
   <div id="screen-mentors" class="screen">
     <div class="sec-hdr"><div class="sec-title">Mentor Profiles</div><button class="btn btn-secondary btn-sm" onclick="openMentorModal()">+ Add</button></div>
     <div id="mentor-list"></div>
   </div>
-
-  <!-- ARCHIVE -->
   <div id="screen-archive" class="screen">
     <div class="sec-hdr"><div class="sec-title">Archive</div></div>
-    <div style="font-size:0.72rem;color:var(--mist);margin-bottom:14px;">Completed internships · Retained 3 years per DPDP Act 2023</div>
+    <div style="font-size:0.72rem;color:var(--mist);margin-bottom:14px;">Completed internships · 3-year DPDP retention</div>
     <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" placeholder="Search archived interns…" id="archive-search" oninput="filterArchive()"/></div>
     <div id="archive-list"></div>
   </div>
-
-  <!-- DETAIL -->
-  <div id="screen-detail" class="screen">
-    <div id="detail-content"></div>
-  </div>
-
-  <!-- BOTTOM NAV -->
+  <div id="screen-detail" class="screen"><div id="detail-content"></div></div>
   <nav class="bottom-nav">
-    <button class="nav-item active" id="nav-home" onclick="showScreen('home')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Home<div class="nav-pip"></div>
-    </button>
-    <button class="nav-item" id="nav-add" onclick="showScreen('add')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      Add<div class="nav-pip"></div>
-    </button>
-    <button class="nav-item" id="nav-mentors" onclick="showScreen('mentors')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-      Mentors<div class="nav-pip"></div>
-    </button>
-    <button class="nav-item" id="nav-archive" onclick="showScreen('archive')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
-      Archive<div class="nav-pip"></div>
-    </button>
+    <button class="nav-item active" id="nav-home" onclick="showScreen('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home<div class="nav-pip"></div></button>
+    <button class="nav-item" id="nav-add" onclick="showScreen('add')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Add<div class="nav-pip"></div></button>
+    <button class="nav-item" id="nav-mentors" onclick="showScreen('mentors')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Mentors<div class="nav-pip"></div></button>
+    <button class="nav-item" id="nav-archive" onclick="showScreen('archive')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>Archive<div class="nav-pip"></div></button>
   </nav>
 </div>
 
-<!-- ASSIGN MODAL -->
-<div class="modal-overlay" id="assign-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⚡ Assign Posting & Mentor</div>
-    <div style="font-size:0.75rem;color:var(--mist);margin-bottom:14px;" id="assign-name-label"></div>
-    <div class="form-group"><label class="form-label">Posting Location *</label><input class="form-input" id="a-location" placeholder="e.g. ENT OPD"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" id="a-start"/></div>
-      <div class="form-group"><label class="form-label">End Date</label><input class="form-input" type="date" id="a-end"/></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Mentor Name *</label><input class="form-input" id="a-mentor"/></div>
-      <div class="form-group"><label class="form-label">Designation</label><input class="form-input" id="a-mdesig"/></div>
-    </div>
-    <div class="form-group"><label class="form-label">Objective</label><textarea class="form-textarea" id="a-objective" style="min-height:70px;"></textarea></div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" onclick="closeModal('assign-modal')">Cancel</button>
-      <button class="btn btn-gold" onclick="submitAssign()">✦ Activate Intern</button>
-    </div>
-  </div>
-</div>
-
-<!-- REJECT REPORT MODAL -->
-<div class="modal-overlay" id="reject-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Send Report Back</div>
-    <div class="form-group"><label class="form-label">Reason / Feedback *</label><textarea class="form-textarea" id="reject-note" placeholder="What needs to be corrected or added?"></textarea></div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" onclick="closeModal('reject-modal')">Cancel</button>
-      <button class="btn btn-danger" onclick="submitReject()">Send Back</button>
-    </div>
-  </div>
-</div>
-
-<!-- MENTOR MODAL -->
-<div class="modal-overlay" id="mentor-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Add Mentor</div>
-    <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="m-name"/></div>
-    <div class="form-group"><label class="form-label">Designation</label><input class="form-input" id="m-desig"/></div>
-    <div class="form-group"><label class="form-label">Department</label><input class="form-input" id="m-dept"/></div>
-    <div class="form-row">
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="m-email" type="email"/></div>
-      <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="m-phone" type="tel"/></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-ghost" onclick="closeModal('mentor-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitMentor()">Save Mentor</button>
-    </div>
-  </div>
-</div>
-
+<div class="modal-overlay" id="assign-modal"><div class="modal"><div class="modal-handle"></div><div class="modal-title">⚡ Assign Posting & Mentor</div><div style="font-size:0.75rem;color:var(--mist);margin-bottom:14px;" id="assign-name-label"></div><div class="form-group"><label class="form-label">Posting Location *</label><input class="form-input" id="a-location"/></div><div class="form-row"><div class="form-group"><label class="form-label">Start Date</label><input class="form-input" type="date" id="a-start"/></div><div class="form-group"><label class="form-label">End Date</label><input class="form-input" type="date" id="a-end"/></div></div><div class="form-row"><div class="form-group"><label class="form-label">Mentor *</label><input class="form-input" id="a-mentor"/></div><div class="form-group"><label class="form-label">Designation</label><input class="form-input" id="a-mdesig"/></div></div><div class="form-group"><label class="form-label">Objective</label><textarea class="form-textarea" id="a-objective" style="min-height:70px;"></textarea></div><div class="btn-row"><button class="btn btn-ghost" onclick="closeModal('assign-modal')">Cancel</button><button class="btn btn-gold" onclick="submitAssign()">✦ Activate</button></div></div></div>
+<div class="modal-overlay" id="reject-modal"><div class="modal"><div class="modal-handle"></div><div class="modal-title">Send Report Back</div><div class="form-group"><label class="form-label">Reason *</label><textarea class="form-textarea" id="reject-note" placeholder="What needs to be corrected?"></textarea></div><div class="btn-row"><button class="btn btn-ghost" onclick="closeModal('reject-modal')">Cancel</button><button class="btn btn-danger" onclick="submitReject()">Send Back</button></div></div></div>
+<div class="modal-overlay" id="mentor-modal"><div class="modal"><div class="modal-handle"></div><div class="modal-title">Add Mentor</div><div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="m-name"/></div><div class="form-group"><label class="form-label">Designation</label><input class="form-input" id="m-desig"/></div><div class="form-group"><label class="form-label">Department</label><input class="form-input" id="m-dept"/></div><div class="form-row"><div class="form-group"><label class="form-label">Email</label><input class="form-input" id="m-email" type="email"/></div><div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="m-phone" type="tel"/></div></div><div class="btn-row"><button class="btn btn-ghost" onclick="closeModal('mentor-modal')">Cancel</button><button class="btn btn-primary" onclick="submitMentor()">Save</button></div></div></div>
 <div class="toast" id="toast"></div>
-
 <script>
+
 const SUPA_URL="https://qkyunliqrsgtrhuoynnn.supabase.co";
 const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXVubGlxcnNndHJodW95bm5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTExNjUsImV4cCI6MjA4OTQ4NzE2NX0.w3XphRDVgud5xwH6xgKNiSdT3jx2YnnMYnKafQ-J244";
 const db=supabase.createClient(SUPA_URL,SUPA_KEY);
-
 let allInterns=[],allMentors=[],checklist={},activeChip="All",assigningId=null,rejectingId=null;
 
-// ── AUTH ──
 async function doLogin(){
   const email=document.getElementById("login-email").value.trim();
   const pass=document.getElementById("login-pass").value;
@@ -460,43 +367,30 @@ async function doLogout(){
   document.getElementById("login-wrap").style.display="flex";
   document.getElementById("app-shell").style.display="none";
 }
-async function checkSession(){
-  const{data:{session}}=await db.auth.getSession();
-  if(session){showApp();}
-}
+window.onload=async function(){
+  try{const{data:{session}}=await db.auth.getSession();if(session)showApp();}
+  catch(e){console.error("Session error",e);}
+};
 function showApp(){
   document.getElementById("login-wrap").style.display="none";
   document.getElementById("app-shell").style.display="block";
   refreshAll();
 }
-window.onload=()=>checkSession();
-
-// ── DATA ──
 async function refreshAll(){
   await Promise.all([loadInterns(),loadMentors(),loadChecklist()]);
   updateStats();renderPending();renderHomeList();renderMentors();renderArchive();
 }
-async function loadInterns(){
-  const{data}=await db.from("interns").select("*").order("created_at",{ascending:false});
-  allInterns=data||[];
-}
-async function loadMentors(){
-  const{data}=await db.from("mentors").select("*").order("name");
-  allMentors=data||[];
-}
+async function loadInterns(){const{data}=await db.from("interns").select("*").order("created_at",{ascending:false});allInterns=data||[];}
+async function loadMentors(){const{data}=await db.from("mentors").select("*").order("name");allMentors=data||[];}
 async function loadChecklist(){
-  const[att,rep,cert]=await Promise.all([
-    db.from("attendance").select("intern_id"),
-    db.from("reports").select("intern_id"),
-    db.from("certificates").select("intern_id")
-  ]);
+  const[att,rep,cert]=await Promise.all([db.from("attendance").select("intern_id"),db.from("reports").select("intern_id"),db.from("certificates").select("intern_id")]);
   checklist={};
-  allInterns.forEach(i=>{
+  allInterns.forEach(function(i){
     const id=i.id;
     checklist[id]={
       profile:!!(i.full_name&&i.college),
       mentor:!!(i.mentor_name&&i.posting_location),
-      attendance:(att.data||[]).some(a=>a.intern_id===id),
+      attendance:(att.data||[]).some(function(a){return a.intern_id===id;}),
       report:i.report_status==="validated",
       certificate:!!(i.certificate_link)
     };
@@ -506,349 +400,137 @@ function isDraft(i){return !i.posting_location||!i.mentor_name;}
 function isActive(i){return !isDraft(i)&&i.status==="active";}
 function isCompleted(i){return i.status==="completed";}
 function progress(id){return Object.values(checklist[id]||{}).filter(Boolean).length;}
-function initials(n){return(n||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();}
-function threeYearsAgo(){const d=new Date();d.setFullYear(d.getFullYear()-3);return d;}
+function ini(n){return(n||"?").split(" ").map(function(w){return w[0]||"";}).slice(0,2).join("").toUpperCase();}
 
 function updateStats(){
-  document.getElementById("s-applied").textContent=allInterns.filter(i=>i.status==="applied"||i.status==="shortlisted").length;
+  document.getElementById("s-applied").textContent=allInterns.filter(function(i){return i.status==="applied"||i.status==="shortlisted";}).length;
   document.getElementById("s-active").textContent=allInterns.filter(isActive).length;
-  document.getElementById("s-reports").textContent=allInterns.filter(i=>i.report_status==="submitted").length;
+  document.getElementById("s-reports").textContent=allInterns.filter(function(i){return i.report_status==="submitted";}).length;
   document.getElementById("s-done").textContent=allInterns.filter(isCompleted).length;
 }
-
 function renderPending(){
-  const pending=allInterns.filter(i=>!isCompleted(i)&&(isDraft(i)||i.status==="applied"));
+  const pending=allInterns.filter(function(i){return !isCompleted(i)&&(isDraft(i)||i.status==="applied");});
   const el=document.getElementById("pending-wrap");
   if(!pending.length){el.innerHTML="";return;}
-  el.innerHTML=`<div class="pending-banner" onclick="setChip('Pending')">
-    <div style="font-size:1.4rem;">⏳</div>
-    <div class="pb-text">
-      <div class="pb-title">${pending.length} intern${pending.length>1?"s":""} need attention</div>
-      <div class="pb-sub">Applications or assignments pending review</div>
-    </div>
-    <div style="color:#b45309;">›</div>
-  </div>`;
+  el.innerHTML='<div class="pending-banner" onclick="setChip(\'Pending\')">'
+    +'<div style="font-size:1.4rem;">⏳</div><div class="pb-text">'
+    +'<div class="pb-title">'+pending.length+' intern'+(pending.length>1?"s":"")+" need attention</div>"
+    +'<div class="pb-sub">Pending review or assignment</div></div>'
+    +'<div style="color:#b45309;">›</div></div>';
 }
-
 function renderHomeList(){
-  const locs=["All","Pending",...new Set(allInterns.filter(i=>!isCompleted(i)&&i.posting_location).map(i=>i.posting_location).filter(Boolean))];
-  document.getElementById("location-chips").innerHTML=locs.map(l=>`<div class="chip ${l===activeChip?"active":""}" onclick="setChip('${l}')">${l}</div>`).join("");
+  const seen={};
+  const locs=["All","Pending"];
+  allInterns.forEach(function(i){if(!isCompleted(i)&&i.posting_location&&!seen[i.posting_location]){seen[i.posting_location]=1;locs.push(i.posting_location);}});
+  document.getElementById("location-chips").innerHTML=locs.map(function(l){
+    return '<div class="chip '+(l===activeChip?"active":"")+'" onclick="setChip(\''+l+'\')">'+l+'</div>';
+  }).join("");
   filterHome();
 }
 function setChip(l){activeChip=l;renderHomeList();}
 function filterHome(){
   const q=(document.getElementById("home-search").value||"").toLowerCase();
-  let list=allInterns.filter(i=>!isCompleted(i));
-  if(activeChip==="Pending") list=list.filter(i=>isDraft(i)||i.status==="applied");
-  else if(activeChip!=="All") list=list.filter(i=>i.posting_location===activeChip);
-  if(q) list=list.filter(i=>(i.full_name||"").toLowerCase().includes(q)||(i.mentor_name||"").toLowerCase().includes(q)||(i.college||"").toLowerCase().includes(q));
+  let list=allInterns.filter(function(i){return !isCompleted(i);});
+  if(activeChip==="Pending") list=list.filter(function(i){return isDraft(i)||i.status==="applied";});
+  else if(activeChip!=="All") list=list.filter(function(i){return i.posting_location===activeChip;});
+  if(q) list=list.filter(function(i){return(i.full_name||"").toLowerCase().indexOf(q)>-1||(i.mentor_name||"").toLowerCase().indexOf(q)>-1||(i.college||"").toLowerCase().indexOf(q)>-1;});
   const c=document.getElementById("intern-list");
-  if(!list.length){c.innerHTML=`<div class="empty"><div class="empty-art">🎓</div><div style="font-size:0.875rem;">No interns found</div></div>`;return;}
+  if(!list.length){c.innerHTML='<div class="empty"><div class="empty-art">🎓</div><div style="font-size:0.875rem;">No interns found</div></div>';return;}
   c.innerHTML=list.map(internCardHTML).join("");
 }
-
 function internCardHTML(i){
   const ch=checklist[i.id]||{};
   const prog=progress(i.id);
   const pct=Math.round((prog/5)*100);
   const draft=isDraft(i);
-  const photo=i.photo_url?`<img class="card-photo" src="${i.photo_url}" alt="${i.full_name}" onerror="this.outerHTML='<div class=\"card-avatar\">${initials(i.full_name)}</div>'"/>`:`<div class="card-avatar">${initials(i.full_name)}</div>`;
-  const badgeClass={applied:"badge-applied",shortlisted:"badge-shortlisted",active:"badge-active",completed:"badge-completed",rejected:"badge-rejected"}[i.status]||"badge-applied";
-  const checks=[
-    {k:"profile",l:"Profile"},{k:"mentor",l:"Mentor"},{k:"attendance",l:"Attendance"},
-    {k:"report",l:"Report"},{k:"certificate",l:"Certificate"}
-  ];
-  const reportDot=i.report_status==="submitted"?"warn":ch.report?"done":"pending";
-  const dotClass={profile:ch.profile?"done":"pending",mentor:ch.mentor?"done":"pending",attendance:ch.attendance?"done":"pending",report:reportDot,certificate:ch.certificate?"done":"pending"};
-  return `<div class="intern-card" onclick="openDetail('${i.id}')">
-    <div class="status-badge ${badgeClass}">${i.status||"applied"}</div>
-    <div class="card-profile">${photo}
-      <div class="card-year-badge">${(i.academic_year||"Intern").split(" ").slice(0,2).join(" ")}</div>
-    </div>
-    <div class="card-body">
-      <div class="card-name">${i.full_name}</div>
-      <div class="card-sub">${i.department||""} · ${i.college||""}</div>
-      ${draft?`<div style="font-size:0.68rem;color:var(--amber);font-weight:500;margin-bottom:5px;">⚠ Awaiting assignment</div>`:`<div class="card-posting">📍 ${i.posting_location}</div>`}
-      <div class="card-mentor">${i.mentor_name?"👤 "+i.mentor_name:"<span style='color:var(--mist)'>No mentor</span>"}</div>
-      <div class="card-checks">${checks.map(ch=>`<div class="check-item"><div class="check-dot ${dotClass[ch.k]}">${dotClass[ch.k]==="done"?"✓":dotClass[ch.k]==="warn"?"!":"○"}</div><span class="check-text">${ch.l}</span></div>`).join("")}</div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
-      <div class="prog-label">${prog}/5 · ${pct}%</div>
-    </div>
-  </div>`;
+  const photo=i.photo_url
+    ?'<img class="card-photo" src="'+i.photo_url+'" alt="Photo" onerror="this.style.display=\'none\'"/>'
+    :'<div class="card-avatar">'+ini(i.full_name)+'</div>';
+  const badges={applied:"badge-applied",shortlisted:"badge-shortlisted",active:"badge-active",completed:"badge-completed",rejected:"badge-rejected"};
+  const checks=[{k:"profile",l:"Profile"},{k:"mentor",l:"Mentor"},{k:"attendance",l:"Attendance"},{k:"report",l:"Report"},{k:"certificate",l:"Certificate"}];
+  const dc={profile:ch.profile?"done":"pending",mentor:ch.mentor?"done":"pending",attendance:ch.attendance?"done":"pending",report:i.report_status==="submitted"?"warn":ch.report?"done":"pending",certificate:ch.certificate?"done":"pending"};
+  return '<div class="intern-card" onclick="openDetail(\''+i.id+\')">'
+    +'<div class="status-badge '+(badges[i.status]||"badge-applied")+'">'+(i.status||"applied")+'</div>'
+    +'<div class="card-profile">'+photo+'<div class="card-year-badge">'+((i.academic_year||"Intern").split(" ").slice(0,2).join(" "))+'</div></div>'
+    +'<div class="card-body"><div class="card-name">'+i.full_name+'</div>'
+    +'<div class="card-sub">'+(i.department||"")+" · "+(i.college||"")+'</div>'
+    +(draft?'<div style="font-size:0.68rem;color:var(--amber);font-weight:500;margin-bottom:5px;">⚠ Awaiting assignment</div>':'<div class="card-posting">📍 '+i.posting_location+'</div>')
+    +'<div class="card-mentor">'+(i.mentor_name?"👤 "+i.mentor_name:'<span style="color:var(--mist)">No mentor</span>')+'</div>'
+    +'<div class="card-checks">'+checks.map(function(c){const d=dc[c.k];return'<div class="check-item"><div class="check-dot '+d+'">'+(d==="done"?"✓":d==="warn"?"!":"○")+'</div><span class="check-text">'+c.l+'</span></div>';}).join("")+'</div>'
+    +'<div class="prog-bar"><div class="prog-fill" style="width:'+pct+'%"></div></div>'
+    +'<div class="prog-label">'+prog+'/5 · '+pct+'%</div></div></div>';
 }
-
-// ── DETAIL ──
 async function openDetail(id){
-  const i=allInterns.find(x=>x.id===id);if(!i)return;
+  const i=allInterns.find(function(x){return x.id===id;});if(!i)return;
   showScreen("detail");
   const ch=checklist[id]||{};
-  const prog=progress(id);
-  const pct=Math.round((prog/5)*100);
-  const draft=isDraft(i);
-  const photo=i.photo_url?`<img class="detail-photo" src="${i.photo_url}" alt="${i.full_name}" onerror="this.outerHTML='<div class=\"detail-avatar\">${initials(i.full_name)}</div>'"/>`:`<div class="detail-avatar">${initials(i.full_name)}</div>`;
-  const statusSteps=["applied","shortlisted","active","completed"];
-  const curStep=statusSteps.indexOf(i.status||"applied");
-
-  // Report milestone row
+  const prog=progress(id);const pct=Math.round((prog/5)*100);const draft=isDraft(i);
+  const photo=i.photo_url?'<img class="detail-photo" src="'+i.photo_url+'" alt="Photo" onerror="this.style.display=\'none\'"/>'
+    :'<div class="detail-avatar">'+ini(i.full_name)+'</div>';
+  const sIdx=["applied","shortlisted","active","completed"].indexOf(i.status||"applied");
+  const stepsHTML=["Applied","Shortlisted","Active","Completed"].map(function(s,idx){
+    const line=idx<3?'<div class="ss-line '+(idx<sIdx?"done":"")+'"></div>':"";
+    return '<div class="ss">'+line+'<div class="ss-dot '+(idx<sIdx?"done":idx===sIdx?"current":"")+'">'+(idx<sIdx?"✓":String(idx+1))+'</div><div class="ss-label">'+s+'</div></div>';
+  }).join("");
+  let statusBtns="";
+  if(i.status==="applied") statusBtns='<button class="toggle-btn mark" onclick="updateStatus(\''+id+'\',\'shortlisted\')">Shortlist</button> <button class="toggle-btn unmark" onclick="updateStatus(\''+id+'\',\'rejected\')">Reject</button>';
+  if(i.status==="shortlisted"&&draft) statusBtns+=' <button class="validate-btn" onclick="openAssignModal(\''+id+'\')">Assign & Activate →</button>';
+  if(i.status==="active") statusBtns+='<button class="toggle-btn mark" onclick="updateStatus(\''+id+'\',\'completed\')">Mark Complete</button>';
   let reportRow="";
-  if(i.report_status==="not_submitted"||!i.report_status){
-    reportRow=`<div class="milestone-row"><div class="m-icon pending">📄</div><div class="m-text"><div class="m-label">Report Submission</div><div class="m-sub">Intern has not submitted a report yet</div></div></div>`;
-  } else if(i.report_status==="submitted"){
-    reportRow=`<div class="milestone-row"><div class="m-icon warn">📄</div><div class="m-text"><div class="m-label">Report Submitted — Pending Review</div><div class="m-sub">Submitted ${i.report_submitted_at?new Date(i.report_submitted_at).toLocaleDateString():"recently"}</div><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;"><a class="report-link-btn" href="${i.report_link}" target="_blank">📎 Open Report</a><button class="validate-btn" onclick="event.stopPropagation();validateReport('${id}')">✓ Validate</button><button class="reject-btn" onclick="event.stopPropagation();openRejectModal('${id}')">↩ Send Back</button></div></div></div>`;
-  } else if(i.report_status==="rejected"){
-    reportRow=`<div class="milestone-row"><div class="m-icon pending">📄</div><div class="m-text"><div class="m-label">Report Sent Back</div><div class="m-sub" style="color:var(--red);">${i.report_rejection_note||"Needs revision"}</div></div></div>`;
-  } else if(i.report_status==="validated"){
-    reportRow=`<div class="milestone-row"><div class="m-icon done">📄</div><div class="m-text"><div class="m-label">Report Validated ✓</div><div class="m-sub">Validated ${i.report_validated_at?new Date(i.report_validated_at).toLocaleDateString():"recently"}</div></div><div style="color:var(--green);font-size:0.8rem;font-weight:600;">✓</div></div>`;
-  }
-
-  // Certificate row — only unlocked after report validated
+  if(!i.report_status||i.report_status==="not_submitted") reportRow='<div class="milestone-row"><div class="m-icon pending">📄</div><div class="m-text"><div class="m-label">Report Submission</div><div class="m-sub">Not submitted yet</div></div></div>';
+  else if(i.report_status==="submitted") reportRow='<div class="milestone-row"><div class="m-icon warn">📄</div><div class="m-text"><div class="m-label">Report Pending Review</div><div class="m-sub">Submitted '+(i.report_submitted_at?new Date(i.report_submitted_at).toLocaleDateString():"recently")+'</div><div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;"><a class="report-link-btn" href="'+i.report_link+'" target="_blank">📎 Open</a><button class="validate-btn" onclick="event.stopPropagation();validateReport(\''+id+'\')">✓ Validate</button><button class="reject-btn" onclick="event.stopPropagation();openRejectModal(\''+id+'\')">↩ Send Back</button></div></div></div>';
+  else if(i.report_status==="rejected") reportRow='<div class="milestone-row"><div class="m-icon pending">📄</div><div class="m-text"><div class="m-label">Report Sent Back</div><div class="m-sub" style="color:var(--red);">'+(i.report_rejection_note||"Needs revision")+'</div></div></div>';
+  else if(i.report_status==="validated") reportRow='<div class="milestone-row"><div class="m-icon done">📄</div><div class="m-text"><div class="m-label">Report Validated ✓</div><div class="m-sub">Validated '+(i.report_validated_at?new Date(i.report_validated_at).toLocaleDateString():"recently")+'</div></div></div>';
   let certRow="";
-  if(i.report_status!=="validated"){
-    certRow=`<div class="milestone-row" style="opacity:0.4;"><div class="m-icon pending">🏅</div><div class="m-text"><div class="m-label">Certificate</div><div class="m-sub">🔒 Locked · Validate report first</div></div></div>`;
-  } else if(!i.certificate_link){
-    certRow=`<div class="milestone-row"><div class="m-icon warn">🏅</div><div class="m-text"><div class="m-label">Issue Certificate</div><div class="m-sub">Report validated. Paste certificate link below.</div><div class="cert-input-wrap" onclick="event.stopPropagation()"><input class="cert-input" id="cert-link-input-${id}" placeholder="Google Drive / PDF link…"/><button class="cert-save-btn" onclick="saveCertificate('${id}')">Save</button></div></div></div>`;
-  } else {
-    certRow=`<div class="milestone-row"><div class="m-icon done">🏅</div><div class="m-text"><div class="m-label">Certificate Issued ✓</div><div class="m-sub">Issued ${i.certificate_issued_at?new Date(i.certificate_issued_at).toLocaleDateString():"recently"}</div><a class="report-link-btn" href="${i.certificate_link}" target="_blank" style="display:inline-block;margin-top:6px;">📥 View Certificate</a></div><div style="color:var(--green);font-size:0.8rem;font-weight:600;">✓</div></div>`;
-  }
-
+  if(i.report_status!=="validated") certRow='<div class="milestone-row" style="opacity:0.4;"><div class="m-icon pending">🏅</div><div class="m-text"><div class="m-label">Certificate</div><div class="m-sub">🔒 Validate report first</div></div></div>';
+  else if(!i.certificate_link) certRow='<div class="milestone-row"><div class="m-icon warn">🏅</div><div class="m-text"><div class="m-label">Issue Certificate</div><div class="m-sub">Paste certificate link below</div><div class="cert-input-wrap" onclick="event.stopPropagation()"><input class="cert-input" id="cert-link-input-'+id+'" placeholder="Drive/PDF link…"/><button class="cert-save-btn" onclick="saveCertificate(\''+id+'\')">Save</button></div></div></div>';
+  else certRow='<div class="milestone-row"><div class="m-icon done">🏅</div><div class="m-text"><div class="m-label">Certificate Issued ✓</div><div class="m-sub">Issued '+(i.certificate_issued_at?new Date(i.certificate_issued_at).toLocaleDateString():"recently")+'</div><a class="report-link-btn" href="'+i.certificate_link+'" target="_blank" style="display:inline-block;margin-top:6px;">📥 View</a></div></div>';
   const logs=await loadLogs(id);
-  const logsHTML=logs.length?logs.map(l=>`<div class="log-card"><div class="log-week">Week ${l.week_number} · ${new Date(l.created_at).toLocaleDateString()}</div><div class="log-text"><b>Did:</b> ${l.what_i_did||"—"}<br/><b>Learned:</b> ${l.what_i_learned||"—"}${l.mentor_note?`<br/><b>Mentor:</b> ${l.mentor_note}`:""}</div></div>`).join(""):`<div style="font-size:0.78rem;color:var(--mist);padding:12px 0;">No learning logs yet.</div>`;
-
-  document.getElementById("detail-content").innerHTML=`
-    <button class="back-btn" onclick="showScreen('home')">← Back</button>
-    <div class="detail-hero">
-      ${photo}
-      <div class="detail-name">${i.full_name}</div>
-      <div class="detail-college">${i.college||""} ${i.academic_year?"· "+i.academic_year:""}</div>
-      <div class="detail-tags">
-        ${i.department?`<span class="detail-tag">${i.department}</span>`:""}
-        ${i.posting_location?`<span class="detail-tag">📍 ${i.posting_location}</span>`:"<span class="detail-tag" style="background:rgba(245,158,11,0.25)">⚠ No Posting</span>"}
-        ${i.posting_start?`<span class="detail-tag">📅 ${i.posting_start} → ${i.posting_end||"?"}</span>`:""}
-      </div>
-      <div class="detail-prog-bar"><div class="detail-prog-fill" style="width:${pct}%"></div></div>
-      <div class="detail-prog-label">${prog}/5 milestones · ${pct}%</div>
-    </div>
-
-    <div class="status-flow">
-      <div class="status-flow-title">Application Journey</div>
-      <div class="status-steps">
-        ${["Applied","Shortlisted","Active","Completed"].map((s,idx)=>`
-          <div class="ss">
-            ${idx<3?`<div class="ss-line ${idx<curStep?"done":""}"></div>`:""}
-            <div class="ss-dot ${idx<curStep?"done":idx===curStep?"current":""}">${idx<curStep?"✓":idx+1}</div>
-            <div class="ss-label">${s}</div>
-          </div>`).join("")}
-      </div>
-      <div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;">
-        ${i.status==="applied"?`<button class="toggle-btn mark" onclick="updateStatus('${id}','shortlisted')">Shortlist</button><button class="toggle-btn unmark" onclick="updateStatus('${id}','rejected')">Reject</button>`:""}
-        ${i.status==="shortlisted"&&draft?`<button class="validate-btn" onclick="openAssignModal('${id}')">Assign & Activate →</button>`:""}
-        ${i.status==="active"?`<button class="toggle-btn mark" onclick="updateStatus('${id}','completed')">Mark Complete</button>`:""}
-      </div>
-    </div>
-
-    ${draft&&i.status==="shortlisted"?`<div class="action-card"><div class="action-title">⚡ Assign Posting & Mentor</div><button class="btn btn-gold" onclick="openAssignModal('${id}')">Complete Assignment →</button></div>`:""}
-
-    <div class="milestone-card">
-      <div class="milestone-row"><div class="m-icon ${ch.profile?"done":"pending"}">🎓</div><div class="m-text"><div class="m-label">Intern Profile</div><div class="m-sub">${i.college||"Academic details"}</div></div></div>
-      <div class="milestone-row"><div class="m-icon ${ch.mentor?"done":"pending"}">👨‍⚕️</div><div class="m-text"><div class="m-label">Mentor & Posting</div><div class="m-sub">${i.mentor_name||"Not assigned"}</div></div></div>
-      <div class="milestone-row"><div class="m-icon ${ch.attendance?"done":"pending"}">📋</div><div class="m-text"><div class="m-label">Attendance</div><div class="m-sub">${ch.attendance?"Recorded":"Not yet verified"}</div></div><button class="toggle-btn ${ch.attendance?"unmark":"mark"}" onclick="event.stopPropagation();toggleCheck('${id}','attendance',${ch.attendance})"> ${ch.attendance?"Unmark":"Mark ✓"}</button></div>
-      ${reportRow}
-      ${certRow}
-    </div>
-
-    <div class="info-grid">
-      <div class="info-card"><div class="info-label">Mentor</div><div class="info-val">${i.mentor_name||"—"}</div><div style="font-size:0.7rem;color:var(--mist);">${i.mentor_designation||""}</div></div>
-      <div class="info-card"><div class="info-label">Contact</div><div class="info-val" style="font-size:0.82rem;">${i.phone||"—"}</div><div style="font-size:0.66rem;color:var(--teal);">${i.email||""}</div></div>
-    </div>
-
-    ${i.objective?`<div class="info-card" style="margin-bottom:13px;"><div class="info-label">Objective</div><div style="font-size:0.84rem;line-height:1.65;margin-top:4px;">${i.objective}</div></div>`:""}
-
-    <div class="info-card" style="margin-bottom:13px;">
-      <div class="info-label">Weekly Learning Logs</div>
-      ${logsHTML}
-    </div>
-
-    <div class="btn-row">
-      <button class="btn btn-secondary btn-sm" onclick="editIntern('${id}')">✏ Edit</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteIntern('${id}')">🗑</button>
-      <button class="btn btn-ghost btn-sm" onclick="requestErasure('${id}')" title="DPDP Erasure Request">🔒 Erasure</button>
-    </div>
-    <div class="dpdp-footer">Data retained 3 years post-completion · <a href="privacy.html">Privacy Notice</a> · Grievance: diroff@yenepoyahospital.com</div>
-  `;
+  const logsHTML=logs.length?logs.map(function(l){return'<div class="log-card"><div class="log-week">Week '+l.week_number+' · '+new Date(l.created_at).toLocaleDateString()+'</div><div class="log-text"><b>Did:</b> '+(l.what_i_did||"—")+'<br><b>Learned:</b> '+(l.what_i_learned||"—")+(l.mentor_note?'<br><b>Mentor:</b> '+l.mentor_note:"")+'</div></div>';}).join(""):'<div style="font-size:0.78rem;color:var(--mist);padding:10px 0;">No learning logs yet.</div>';
+  document.getElementById("detail-content").innerHTML=
+    '<button class="back-btn" onclick="showScreen(\'home\')">← Back</button>'
+    +'<div class="detail-hero">'+photo+'<div class="detail-name">'+i.full_name+'</div><div class="detail-college">'+(i.college||"")+(i.academic_year?" · "+i.academic_year:"")+'</div>'
+    +'<div class="detail-tags">'+(i.department?'<span class="detail-tag">'+i.department+'</span>':"")+(i.posting_location?'<span class="detail-tag">📍 '+i.posting_location+'</span>':'<span class="detail-tag" style="background:rgba(245,158,11,0.25)">⚠ No Posting</span>')+(i.posting_start?'<span class="detail-tag">📅 '+i.posting_start+" → "+(i.posting_end||"?")+'</span>':"")+'</div>'
+    +'<div class="detail-prog-bar"><div class="detail-prog-fill" style="width:'+pct+'%"></div></div><div class="detail-prog-label">'+prog+'/5 · '+pct+'%</div></div>'
+    +'<div class="status-flow"><div class="status-flow-title">Application Journey</div><div class="status-steps">'+stepsHTML+'</div><div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;">'+statusBtns+'</div></div>'
+    +(draft&&i.status==="shortlisted"?'<div class="action-card"><div class="action-title">⚡ Assign Posting & Mentor</div><button class="btn btn-gold" onclick="openAssignModal(\''+id+'\')">Complete Assignment →</button></div>':"")
+    +'<div class="milestone-card">'
+    +'<div class="milestone-row"><div class="m-icon '+(ch.profile?"done":"pending")+'">🎓</div><div class="m-text"><div class="m-label">Intern Profile</div><div class="m-sub">'+(i.college||"Academic details")+'</div></div></div>'
+    +'<div class="milestone-row"><div class="m-icon '+(ch.mentor?"done":"pending")+'">👨‍⚕️</div><div class="m-text"><div class="m-label">Mentor & Posting</div><div class="m-sub">'+(i.mentor_name||"Not assigned")+'</div></div></div>'
+    +'<div class="milestone-row"><div class="m-icon '+(ch.attendance?"done":"pending")+'">📋</div><div class="m-text"><div class="m-label">Attendance</div><div class="m-sub">'+(ch.attendance?"Recorded":"Not verified")+'</div></div><button class="toggle-btn '+(ch.attendance?"unmark":"mark")+'" onclick="event.stopPropagation();toggleCheck(\''+id+'\',\'attendance\','+ch.attendance+')">'+( ch.attendance?"Unmark":"Mark ✓")+'</button></div>'
+    +reportRow+certRow+'</div>'
+    +'<div class="info-grid"><div class="info-card"><div class="info-label">Mentor</div><div class="info-val">'+(i.mentor_name||"—")+'</div><div style="font-size:0.7rem;color:var(--mist);">'+(i.mentor_designation||"")+'</div></div>'
+    +'<div class="info-card"><div class="info-label">Contact</div><div class="info-val" style="font-size:0.82rem;">'+(i.phone||"—")+'</div><div style="font-size:0.66rem;color:var(--teal);">'+(i.email||"")+'</div></div></div>'
+    +(i.objective?'<div class="info-card" style="margin-bottom:13px;"><div class="info-label">Objective</div><div style="font-size:0.84rem;line-height:1.65;margin-top:4px;">'+i.objective+'</div></div>':"")
+    +'<div class="info-card" style="margin-bottom:13px;"><div class="info-label">Weekly Learning Logs</div>'+logsHTML+'</div>'
+    +'<div class="btn-row"><button class="btn btn-secondary btn-sm" onclick="editIntern(\''+id+'\')">✏ Edit</button><button class="btn btn-danger btn-sm" onclick="deleteIntern(\''+id+'\')">🗑</button><button class="btn btn-ghost btn-sm" onclick="requestErasure(\''+id+'\')" title="DPDP Erasure">🔒</button></div>'
+    +'<div class="dpdp-footer">3-year retention · <a href="privacy.html">Privacy Notice</a></div>';
 }
-
-async function loadLogs(id){
-  const{data}=await db.from("learning_logs").select("*").eq("intern_id",id).order("week_number");
-  return data||[];
-}
-
-// ── REPORT WORKFLOW ──
-async function validateReport(id){
-  if(!confirm("Validate this report and unlock certificate issuance?"))return;
-  await db.from("interns").update({report_status:"validated",report_validated_at:new Date().toISOString()}).eq("id",id);
-  showToast("Report validated ✓ Certificate unlocked","success");
-  await refreshAll();openDetail(id);
-}
+async function loadLogs(id){const{data}=await db.from("learning_logs").select("*").eq("intern_id",id).order("week_number");return data||[];}
+async function validateReport(id){if(!confirm("Validate report?"))return;await db.from("interns").update({report_status:"validated",report_validated_at:new Date().toISOString()}).eq("id",id);showToast("Validated ✓","success");await refreshAll();openDetail(id);}
 function openRejectModal(id){rejectingId=id;document.getElementById("reject-note").value="";document.getElementById("reject-modal").classList.add("show");}
-async function submitReject(){
-  const note=document.getElementById("reject-note").value.trim();
-  if(!note){showToast("Please add a reason","error");return;}
-  await db.from("interns").update({report_status:"rejected",report_rejection_note:note,report_link:null}).eq("id",rejectingId);
-  closeModal("reject-modal");showToast("Report sent back","warn");
-  await refreshAll();openDetail(rejectingId);
-}
-async function saveCertificate(id){
-  const link=document.getElementById("cert-link-input-"+id)?.value.trim();
-  if(!link){showToast("Please paste a certificate link","error");return;}
-  await db.from("interns").update({certificate_link:link,certificate_issued_at:new Date().toISOString()}).eq("id",id);
-  // Also mark certificate in certificates table
-  await db.from("certificates").insert({intern_id:id,issued_at:new Date().toISOString()});
-  showToast("Certificate issued ✓","success");
-  await refreshAll();openDetail(id);
-}
-
-// ── STATUS ──
-async function updateStatus(id,status){
-  await db.from("interns").update({status}).eq("id",id);
-  showToast("Status updated: "+status,"success");
-  await refreshAll();openDetail(id);
-}
-
-// ── TOGGLE CHECKS ──
-async function toggleCheck(id,key,current){
-  const table={attendance:"attendance",report:"reports",certificate:"certificates"}[key];
-  if(!table)return;
-  if(current){await db.from(table).delete().eq("intern_id",id);}
-  else{
-    const row={intern_id:id};
-    if(key==="attendance"){row.date=new Date().toISOString().split("T")[0];row.present=true;}
-    if(key==="report"){row.title="Internship Report";row.submitted_at=new Date().toISOString();}
-    if(key==="certificate"){row.issued_at=new Date().toISOString();}
-    await db.from(table).insert(row);
-  }
-  await loadChecklist();updateStats();filterHome();openDetail(id);
-  showToast(current?"Unmarked":"Marked ✓","success");
-}
-
-// ── ASSIGN ──
-let assigningId=null;
-function openAssignModal(id){
-  assigningId=id;
-  const i=allInterns.find(x=>x.id===id);
-  document.getElementById("assign-name-label").textContent="Assigning for: "+(i?.full_name||"");
-  document.getElementById("assign-modal").classList.add("show");
-}
-async function submitAssign(){
-  const loc=document.getElementById("a-location").value.trim();
-  const mentor=document.getElementById("a-mentor").value.trim();
-  if(!loc||!mentor){showToast("Location & mentor required","error");return;}
-  await db.from("interns").update({
-    posting_location:loc,posting_start:document.getElementById("a-start").value||null,
-    posting_end:document.getElementById("a-end").value||null,
-    mentor_name:mentor,mentor_designation:document.getElementById("a-mdesig").value.trim(),
-    objective:document.getElementById("a-objective").value.trim(),status:"active"
-  }).eq("id",assigningId);
-  closeModal("assign-modal");showToast("Intern activated ✓","success");
-  await refreshAll();openDetail(assigningId);
-}
-
-// ── ADD/EDIT INTERN ──
-async function submitIntern(){
-  const name=document.getElementById("f-name").value.trim();
-  const college=document.getElementById("f-college").value.trim();
-  if(!name||!college){showToast("Name & college required","error");return;}
-  const payload={full_name:name,college,department:document.getElementById("f-dept").value.trim(),academic_year:document.getElementById("f-year").value.trim(),phone:document.getElementById("f-phone").value.trim(),email:document.getElementById("f-email").value.trim(),posting_location:document.getElementById("f-location").value.trim()||null,posting_start:document.getElementById("f-start").value||null,posting_end:document.getElementById("f-end").value||null,mentor_name:document.getElementById("f-mentor").value.trim()||null,mentor_designation:document.getElementById("f-mdesig").value.trim(),objective:document.getElementById("f-objective").value.trim(),status:"active",report_status:"not_submitted"};
-  const{error}=await db.from("interns").insert(payload);
-  if(error){showToast("Error: "+error.message,"error");return;}
-  showToast("Intern registered!","success");clearAddForm();await refreshAll();showScreen("home");
-}
-function clearAddForm(){
-  ["f-name","f-college","f-dept","f-year","f-phone","f-email","f-location","f-start","f-end","f-mentor","f-mdesig","f-objective"].forEach(id=>{const el=document.getElementById(id);if(el)el.value="";});
-  document.getElementById("submit-btn").textContent="✦ Register Intern";
-  document.getElementById("submit-btn").onclick=submitIntern;
-}
-function editIntern(id){
-  const i=allInterns.find(x=>x.id===id);if(!i)return;
-  showScreen("add");
-  const map={"f-name":i.full_name,"f-college":i.college,"f-dept":i.department,"f-year":i.academic_year,"f-phone":i.phone,"f-email":i.email,"f-location":i.posting_location,"f-start":i.posting_start,"f-end":i.posting_end,"f-mentor":i.mentor_name,"f-mdesig":i.mentor_designation,"f-objective":i.objective};
-  Object.entries(map).forEach(([k,v])=>{const el=document.getElementById(k);if(el)el.value=v||"";});
-  const btn=document.getElementById("submit-btn");
-  btn.textContent="✦ Update Intern";
-  btn.onclick=async()=>{
-    await db.from("interns").update({full_name:document.getElementById("f-name").value.trim(),college:document.getElementById("f-college").value.trim(),department:document.getElementById("f-dept").value.trim(),academic_year:document.getElementById("f-year").value.trim(),phone:document.getElementById("f-phone").value.trim(),email:document.getElementById("f-email").value.trim(),posting_location:document.getElementById("f-location").value.trim()||null,posting_start:document.getElementById("f-start").value||null,posting_end:document.getElementById("f-end").value||null,mentor_name:document.getElementById("f-mentor").value.trim()||null,mentor_designation:document.getElementById("f-mdesig").value.trim(),objective:document.getElementById("f-objective").value.trim()}).eq("id",id);
-    showToast("Updated ✓","success");clearAddForm();await refreshAll();showScreen("home");
-  };
-}
-async function deleteIntern(id){
-  if(!confirm("Delete this intern record permanently?"))return;
-  await db.from("interns").delete().eq("id",id);
-  showToast("Deleted","success");await refreshAll();showScreen("home");
-}
-async function requestErasure(id){
-  if(!confirm("Mark this record for erasure as per DPDP Act request?"))return;
-  await db.from("interns").update({shortlist_note:"[ERASURE REQUESTED - "+new Date().toLocaleDateString()+"]"}).eq("id",id);
-  showToast("Erasure request recorded","warn");
-}
-
-// ── MENTORS ──
-function renderMentors(){
-  const c=document.getElementById("mentor-list");
-  if(!allMentors.length){c.innerHTML=`<div class="empty"><div class="empty-art">👨‍⚕️</div><div style="font-size:0.875rem;">No mentors yet</div></div>`;return;}
-  c.innerHTML=allMentors.map(m=>{
-    const count=allInterns.filter(i=>(i.mentor_name||"").toLowerCase()===(m.name||"").toLowerCase()).length;
-    return`<div class="mentor-card-ui"><div class="mentor-av">${initials(m.name)}</div><div style="flex:1;"><div style="font-weight:600;font-size:0.95rem;">${m.name}</div><div style="font-size:0.72rem;color:var(--mist);">${m.designation||""} ${m.department?"· "+m.department:""}</div>${m.email?`<div style="font-size:0.66rem;color:var(--teal);margin-top:2px;">${m.email}</div>`:""}<div style="font-size:0.63rem;color:var(--teal);margin-top:2px;">${count} intern${count!==1?"s":""} assigned</div></div><button class="toggle-btn unmark" onclick="deleteMentor('${m.id}')">✕</button></div>`;
-  }).join("");
-}
+async function submitReject(){const note=document.getElementById("reject-note").value.trim();if(!note){showToast("Add a reason","error");return;}await db.from("interns").update({report_status:"rejected",report_rejection_note:note,report_link:null}).eq("id",rejectingId);closeModal("reject-modal");showToast("Sent back","warn");await refreshAll();openDetail(rejectingId);}
+async function saveCertificate(id){const input=document.getElementById("cert-link-input-"+id);const link=input?input.value.trim():"";if(!link){showToast("Paste a link","error");return;}await db.from("interns").update({certificate_link:link,certificate_issued_at:new Date().toISOString()}).eq("id",id);await db.from("certificates").insert({intern_id:id,issued_at:new Date().toISOString()});showToast("Certificate issued ✓","success");await refreshAll();openDetail(id);}
+async function updateStatus(id,status){await db.from("interns").update({status:status}).eq("id",id);showToast("Status: "+status,"success");await refreshAll();openDetail(id);}
+async function toggleCheck(id,key,current){const table={attendance:"attendance",report:"reports",certificate:"certificates"}[key];if(!table)return;if(current){await db.from(table).delete().eq("intern_id",id);}else{const row={intern_id:id};if(key==="attendance"){row.date=new Date().toISOString().split("T")[0];row.present=true;}if(key==="report"){row.title="Internship Report";row.submitted_at=new Date().toISOString();}if(key==="certificate"){row.issued_at=new Date().toISOString();}await db.from(table).insert(row);}await loadChecklist();updateStats();filterHome();openDetail(id);showToast(current?"Unmarked":"Marked ✓","success");}
+function openAssignModal(id){assigningId=id;const i=allInterns.find(function(x){return x.id===id;});document.getElementById("assign-name-label").textContent="Assigning: "+(i?i.full_name:"");document.getElementById("assign-modal").classList.add("show");}
+async function submitAssign(){const loc=document.getElementById("a-location").value.trim();const mentor=document.getElementById("a-mentor").value.trim();if(!loc||!mentor){showToast("Location & mentor required","error");return;}await db.from("interns").update({posting_location:loc,posting_start:document.getElementById("a-start").value||null,posting_end:document.getElementById("a-end").value||null,mentor_name:mentor,mentor_designation:document.getElementById("a-mdesig").value.trim(),objective:document.getElementById("a-objective").value.trim(),status:"active"}).eq("id",assigningId);closeModal("assign-modal");showToast("Intern activated ✓","success");await refreshAll();openDetail(assigningId);}
+async function submitIntern(){const name=document.getElementById("f-name").value.trim();const college=document.getElementById("f-college").value.trim();if(!name||!college){showToast("Name & college required","error");return;}const{error}=await db.from("interns").insert({full_name:name,college:college,department:document.getElementById("f-dept").value.trim(),academic_year:document.getElementById("f-year").value.trim(),phone:document.getElementById("f-phone").value.trim(),email:document.getElementById("f-email").value.trim(),posting_location:document.getElementById("f-location").value.trim()||null,posting_start:document.getElementById("f-start").value||null,posting_end:document.getElementById("f-end").value||null,mentor_name:document.getElementById("f-mentor").value.trim()||null,mentor_designation:document.getElementById("f-mdesig").value.trim(),objective:document.getElementById("f-objective").value.trim(),status:"active",report_status:"not_submitted"});if(error){showToast("Error: "+error.message,"error");return;}showToast("Registered!","success");clearAddForm();await refreshAll();showScreen("home");}
+function clearAddForm(){["f-name","f-college","f-dept","f-year","f-phone","f-email","f-location","f-start","f-end","f-mentor","f-mdesig","f-objective"].forEach(function(id){const el=document.getElementById(id);if(el)el.value="";});document.getElementById("submit-btn").textContent="✦ Register Intern";document.getElementById("submit-btn").onclick=submitIntern;}
+function editIntern(id){const i=allInterns.find(function(x){return x.id===id;});if(!i)return;showScreen("add");const map={"f-name":i.full_name,"f-college":i.college,"f-dept":i.department,"f-year":i.academic_year,"f-phone":i.phone,"f-email":i.email,"f-location":i.posting_location,"f-start":i.posting_start,"f-end":i.posting_end,"f-mentor":i.mentor_name,"f-mdesig":i.mentor_designation,"f-objective":i.objective};Object.entries(map).forEach(function(e){const el=document.getElementById(e[0]);if(el)el.value=e[1]||"";});const btn=document.getElementById("submit-btn");btn.textContent="✦ Update";btn.onclick=async function(){await db.from("interns").update({full_name:document.getElementById("f-name").value.trim(),college:document.getElementById("f-college").value.trim(),department:document.getElementById("f-dept").value.trim(),academic_year:document.getElementById("f-year").value.trim(),phone:document.getElementById("f-phone").value.trim(),email:document.getElementById("f-email").value.trim(),posting_location:document.getElementById("f-location").value.trim()||null,posting_start:document.getElementById("f-start").value||null,posting_end:document.getElementById("f-end").value||null,mentor_name:document.getElementById("f-mentor").value.trim()||null,mentor_designation:document.getElementById("f-mdesig").value.trim(),objective:document.getElementById("f-objective").value.trim()}).eq("id",id);showToast("Updated ✓","success");clearAddForm();await refreshAll();showScreen("home");};}
+async function deleteIntern(id){if(!confirm("Delete permanently?"))return;await db.from("interns").delete().eq("id",id);showToast("Deleted","success");await refreshAll();showScreen("home");}
+async function requestErasure(id){if(!confirm("Mark for DPDP erasure?"))return;await db.from("interns").update({shortlist_note:"[ERASURE "+new Date().toLocaleDateString()+"]"}).eq("id",id);showToast("Erasure recorded","warn");}
+function renderMentors(){const c=document.getElementById("mentor-list");if(!allMentors.length){c.innerHTML='<div class="empty"><div class="empty-art">👨‍⚕️</div><div style="font-size:0.875rem;">No mentors yet</div></div>';return;}c.innerHTML=allMentors.map(function(m){const count=allInterns.filter(function(i){return(i.mentor_name||"").toLowerCase()===(m.name||"").toLowerCase();}).length;return'<div class="mentor-card-ui"><div class="mentor-av">'+ini(m.name)+'</div><div style="flex:1;"><div style="font-weight:600;font-size:0.95rem;">'+m.name+'</div><div style="font-size:0.72rem;color:var(--mist);">'+(m.designation||"")+(m.department?" · "+m.department:"")+'</div>'+(m.email?'<div style="font-size:0.66rem;color:var(--teal);">'+m.email+'</div>':"")+'<div style="font-size:0.63rem;color:var(--teal);">'+count+' intern'+(count!==1?"s":"")+" assigned</div></div>"+'<button class="toggle-btn unmark" onclick="deleteMentor(\''+m.id+'\')">✕</button></div>';}).join("");}
 function openMentorModal(){document.getElementById("mentor-modal").classList.add("show");}
-async function submitMentor(){
-  const name=document.getElementById("m-name").value.trim();
-  if(!name){showToast("Name required","error");return;}
-  await db.from("mentors").insert({name,designation:document.getElementById("m-desig").value.trim(),department:document.getElementById("m-dept").value.trim(),email:document.getElementById("m-email").value.trim(),phone:document.getElementById("m-phone").value.trim()});
-  ["m-name","m-desig","m-dept","m-email","m-phone"].forEach(id=>document.getElementById(id).value="");
-  closeModal("mentor-modal");await loadMentors();renderMentors();showToast("Mentor added ✓","success");
-}
-async function deleteMentor(id){
-  if(!confirm("Remove mentor?"))return;
-  await db.from("mentors").delete().eq("id",id);
-  await loadMentors();renderMentors();showToast("Removed","success");
-}
-
-// ── ARCHIVE ──
+async function submitMentor(){const name=document.getElementById("m-name").value.trim();if(!name){showToast("Name required","error");return;}await db.from("mentors").insert({name:name,designation:document.getElementById("m-desig").value.trim(),department:document.getElementById("m-dept").value.trim(),email:document.getElementById("m-email").value.trim(),phone:document.getElementById("m-phone").value.trim()});["m-name","m-desig","m-dept","m-email","m-phone"].forEach(function(id){document.getElementById(id).value="";});closeModal("mentor-modal");await loadMentors();renderMentors();showToast("Mentor added ✓","success");}
+async function deleteMentor(id){if(!confirm("Remove?"))return;await db.from("mentors").delete().eq("id",id);await loadMentors();renderMentors();showToast("Removed","success");}
 function renderArchive(){filterArchive();}
-function filterArchive(){
-  const q=(document.getElementById("archive-search")?.value||"").toLowerCase();
-  let list=allInterns.filter(isCompleted);
-  if(q)list=list.filter(i=>(i.full_name||"").toLowerCase().includes(q)||(i.college||"").toLowerCase().includes(q));
-  const c=document.getElementById("archive-list");
-  if(!list.length){c.innerHTML=`<div class="empty"><div class="empty-art">📦</div><div style="font-size:0.875rem;">No archived interns yet</div></div>`;return;}
-  const now=new Date();
-  c.innerHTML=list.map(i=>{
-    const endDate=i.posting_end?new Date(i.posting_end):null;
-    const retainUntil=endDate?new Date(endDate.getTime()+3*365.25*24*3600*1000):null;
-    const expiringSoon=retainUntil&&(retainUntil-now)<6*30*24*3600*1000;
-    const expired=retainUntil&&retainUntil<now;
-    const photo=i.photo_url?`<img class="archive-av" src="${i.photo_url}" alt="${i.full_name}" onerror="this.outerHTML='<div class=\"archive-av-placeholder\">👤</div>'"/>`:`<div class="archive-av-placeholder">👤</div>`;
-    return`<div class="archive-row">${photo}<div style="flex:1;min-width:0;"><div class="archive-name">${i.full_name}</div><div class="archive-meta">${i.college||""} · ${i.department||""}</div><div class="archive-meta">${i.posting_location||""} · ${i.posting_start||"?"}→${i.posting_end||"?"}</div>${expired?`<div class="retention-warn">⚠ Retention period expired — review for deletion</div>`:expiringSoon?`<div class="retention-warn">⚠ Retention expires ${retainUntil?.toLocaleDateString()}</div>`:""}</div>${i.certificate_link?`<a href="${i.certificate_link}" target="_blank" style="font-size:0.65rem;color:var(--teal);text-decoration:none;">🏅 Cert</a>`:""}</div>`;
-  }).join("");
-}
-
-// ── NAV ──
-function showScreen(name){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-  document.getElementById("screen-"+name).classList.add("active");
-  const nav=document.getElementById("nav-"+name);if(nav)nav.classList.add("active");
-  window.scrollTo(0,0);
-}
+function filterArchive(){const q=(document.getElementById("archive-search")?document.getElementById("archive-search").value:"").toLowerCase();let list=allInterns.filter(isCompleted);if(q)list=list.filter(function(i){return(i.full_name||"").toLowerCase().indexOf(q)>-1;});const c=document.getElementById("archive-list");if(!list.length){c.innerHTML='<div class="empty"><div class="empty-art">📦</div><div style="font-size:0.875rem;">No archived interns</div></div>';return;}const now=new Date();c.innerHTML=list.map(function(i){const end=i.posting_end?new Date(i.posting_end):null;const ret=end?new Date(end.getTime()+3*365.25*24*3600*1000):null;const warn=ret&&ret<now?'<div class="retention-warn">⚠ Retention expired</div>':ret&&(ret-now)<6*30*24*3600*1000?'<div class="retention-warn">⚠ Expires '+ret.toLocaleDateString()+'</div>':"";const photo=i.photo_url?'<img class="archive-av" src="'+i.photo_url+'" alt="Photo"/>'+'':'<div class="archive-av-placeholder">👤</div>';return'<div class="archive-row">'+photo+'<div style="flex:1;min-width:0;"><div class="archive-name">'+i.full_name+'</div><div class="archive-meta">'+(i.college||"")+" · "+(i.department||"")+'</div><div class="archive-meta">'+(i.posting_location||"")+" · "+(i.posting_start||"?")+"→"+(i.posting_end||"?")+'</div>'+warn+'</div>'+(i.certificate_link?'<a href="'+i.certificate_link+'" target="_blank" style="font-size:0.65rem;color:var(--teal);">🏅</a>':"")+'</div>';}).join("");}
+function showScreen(name){document.querySelectorAll(".screen").forEach(function(s){s.classList.remove("active");});document.querySelectorAll(".nav-item").forEach(function(n){n.classList.remove("active");});document.getElementById("screen-"+name).classList.add("active");const nav=document.getElementById("nav-"+name);if(nav)nav.classList.add("active");window.scrollTo(0,0);}
 function closeModal(id){document.getElementById(id).classList.remove("show");}
-["assign-modal","reject-modal","mentor-modal"].forEach(id=>{
-  document.getElementById(id)?.addEventListener("click",function(e){if(e.target===this)this.classList.remove("show");});
-});
-function showToast(msg,type=""){
-  const t=document.getElementById("toast");
-  t.textContent=msg;t.className="toast show "+type;
-  setTimeout(()=>{t.className="toast";},2800);
-}
-<\/script>
+["assign-modal","reject-modal","mentor-modal"].forEach(function(id){const el=document.getElementById(id);if(el)el.addEventListener("click",function(e){if(e.target===this)this.classList.remove("show");});});
+function showToast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show "+(type||"");setTimeout(function(){t.className="toast";},2800);}
+
+</script>
 </body>
 </html>
