@@ -482,7 +482,7 @@ function renderPending(){
   var pending=allInterns.filter(function(i){return !isCompleted(i)&&(isDraft(i)||i.status==="applied");});
   var el=document.getElementById("pending-wrap");
   if(!pending.length){el.innerHTML="";return;}
-  el.innerHTML='<div class="pending-banner" onclick="setChip('Pending')">'
+  el.innerHTML='<div class="pending-banner" onclick="setChip(&apos;Pending&apos;)">'
     +'<div style="font-size:1.4rem">⏳</div>'
     +'<div><div class="pb-title">'+pending.length+' intern'+(pending.length>1?"s":"")+" need attention</div>"
     +'<div class="pb-sub">Pending review or assignment</div></div>'
@@ -493,7 +493,7 @@ function renderHomeList(){
   var seen={};var locs=["All","Pending"];
   allInterns.forEach(function(i){if(!isCompleted(i)&&i.posting_location&&!seen[i.posting_location]){seen[i.posting_location]=1;locs.push(i.posting_location);}});
   document.getElementById("location-chips").innerHTML=locs.map(function(l){
-    return '<div class="chip'+(l===activeChip?" active":"")+'" onclick="setChip(''+l+'')">'+l+"</div>";
+    return '<div class="chip'+(l===activeChip?" active":"")+'" onclick="setChip(&apos;"+l+"&apos;)">'+l+"</div>";
   }).join("");
   filterHome();
 }
@@ -510,7 +510,7 @@ function filterHome(){
 }
 function internCard(i){
   var ch=checklist[i.id]||{};var p=prog(i.id);var pct=Math.round(p/5*100);var draft=isDraft(i);
-  var photo=i.photo_url?'<img class="card-photo" src="'+i.photo_url+'" alt="Photo" onerror="this.style.display='none'"/>'
+  var photo=i.photo_url?'<img class="card-photo" src="'+i.photo_url+'" alt="Photo" onerror="this.style.display=&apos;none&apos;"/>'
     :'<div class="card-avatar">'+ini(i.full_name)+"</div>";
   var badges={applied:"badge-applied",shortlisted:"badge-shortlisted",active:"badge-active",completed:"badge-completed",rejected:"badge-rejected"};
   var dc={
@@ -523,7 +523,7 @@ function internCard(i){
   var checks=["profile","mentor","attendance","report","certificate"];
   var labels={profile:"Profile",mentor:"Mentor",attendance:"Attend",report:"Report",certificate:"Cert"};
   var checksHTML=checks.map(function(k){var d=dc[k];return'<div class="check-item"><div class="check-dot '+d+'">'+(d==="done"?"✓":d==="warn"?"!":"○")+'</div><span class="check-text">'+labels[k]+"</span></div>";}).join("");
-  return '<div class="intern-card" onclick="openDetail(''+i.id+')">'
+  return '<div class="intern-card" onclick="openDetail(&apos;"+i.id+"&apos;)">'
     +'<div class="status-badge '+(badges[i.status]||"badge-applied")+'">'+(i.status||"applied")+"</div>"
     +'<div class="card-profile">'+photo+'<div class="card-year-badge">'+((i.academic_year||"Intern").split(" ").slice(0,2).join(" "))+"</div></div>"
     +'<div class="card-body">'
@@ -543,7 +543,7 @@ async function openDetail(id){
   var i=allInterns.find(function(x){return x.id===id;});if(!i)return;
   showScreen("detail");
   var ch=checklist[id]||{};var p=prog(id);var pct=Math.round(p/5*100);var draft=isDraft(i);
-  var photo=i.photo_url?'<img class="detail-photo" src="'+i.photo_url+'" alt="Photo" onerror="this.style.display='none'"/>'
+  var photo=i.photo_url?'<img class="detail-photo" src="'+i.photo_url+'" alt="Photo" onerror="this.style.display=&apos;none&apos;"/>'
     :'<div class="detail-avatar">'+ini(i.full_name)+"</div>";
   var sidx=["applied","shortlisted","active","completed"].indexOf(i.status||"applied");
   var stepsHTML=["Applied","Shortlisted","Active","Completed"].map(function(s,idx){
@@ -552,9 +552,9 @@ async function openDetail(id){
     return'<div class="ss">'+line+'<div class="ss-dot '+dc+'">'+(idx<sidx?"✓":String(idx+1))+'</div><div class="ss-label">'+s+"</div></div>";
   }).join("");
   var sbtn="";
-  if(i.status==="applied")sbtn='<button class="toggle-btn mark" onclick="updateStatus(''+id+'','shortlisted')">Shortlist</button> <button class="toggle-btn unmark" onclick="updateStatus(''+id+'','rejected')">Reject</button>';
-  if(i.status==="shortlisted"&&draft)sbtn+=' <button class="validate-btn" onclick="openAssignModal(''+id+'')">Assign & Activate →</button>';
-  if(i.status==="active")sbtn='<button class="toggle-btn mark" onclick="updateStatus(''+id+'','completed')">Mark Complete</button>';
+  if(i.status==="applied")sbtn='<button class="toggle-btn mark" onclick="updateStatus(&apos;"+id+"&apos;,&apos;shortlisted&apos;)">Shortlist</button> <button class="toggle-btn unmark" onclick="updateStatus(&apos;"+id+"&apos;,&apos;rejected&apos;)">Reject</button>';
+  if(i.status==="shortlisted"&&draft)sbtn+=' <button class="validate-btn" onclick="openAssignModal(&apos;"+id+"&apos;)">Assign & Activate →</button>';
+  if(i.status==="active")sbtn='<button class="toggle-btn mark" onclick="updateStatus(&apos;"+id+"&apos;,&apos;completed&apos;)">Mark Complete</button>';
   var reportRow="";
   if(!i.report_status||i.report_status==="not_submitted"){
     reportRow='<div class="milestone-row"><div class="m-icon pending">📄</div><div class="m-text"><div class="m-label">Report Submission</div><div class="m-sub">Not submitted yet</div></div></div>';
@@ -563,8 +563,8 @@ async function openDetail(id){
       +'<div class="m-sub">Submitted '+(i.report_submitted_at?new Date(i.report_submitted_at).toLocaleDateString():"recently")+"</div>"
       +'<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">'
       +'<a class="report-link-btn" href="'+i.report_link+'" target="_blank">📎 Open Report</a>'
-      +' <button class="validate-btn" onclick="event.stopPropagation();validateReport(''+id+'')">✓ Validate</button>'
-      +' <button class="reject-btn" onclick="event.stopPropagation();openRejectModal(''+id+'')">↩ Send Back</button>'
+      +' <button class="validate-btn" onclick="event.stopPropagation();validateReport(&apos;"+id+"&apos;)">✓ Validate</button>'
+      +' <button class="reject-btn" onclick="event.stopPropagation();openRejectModal(&apos;"+id+"&apos;)">↩ Send Back</button>'
       +"</div></div></div>";
   }else if(i.report_status==="rejected"){
     reportRow='<div class="milestone-row"><div class="m-icon pending">📄</div><div class="m-text"><div class="m-label">Report Sent Back</div><div class="m-sub" style="color:var(--red)">'+(i.report_rejection_note||"Needs revision")+"</div></div></div>";
@@ -577,8 +577,8 @@ async function openDetail(id){
   }else if(!i.certificate_link){
     certRow='<div class="milestone-row"><div class="m-icon warn">🏅</div><div class="m-text"><div class="m-label">Issue Certificate</div><div class="m-sub">Report validated — paste certificate link below</div>'
       +'<div class="cert-input-wrap" onclick="event.stopPropagation()">'
-      +'<input class="cert-input" id="cert-inp-'+id+'" placeholder="Google Drive / PDF link…"/>'
-      +' <button class="cert-save-btn" onclick="saveCert(''+id+'')">Save</button>'
+      +'<input class="cert-input" id="cert-inp-"+id+"" placeholder="Google Drive / PDF link…"/>'
+      +' <button class="cert-save-btn" onclick="saveCert(&apos;"+id+"&apos;)">Save</button>'
       +"</div></div></div>";
   }else{
     certRow='<div class="milestone-row"><div class="m-icon done">🏅</div><div class="m-text"><div class="m-label">Certificate Issued ✓</div><div class="m-sub">Issued '+(i.certificate_issued_at?new Date(i.certificate_issued_at).toLocaleDateString():"recently")+"</div>"
@@ -592,7 +592,7 @@ async function openDetail(id){
       +'<div class="log-text"><b>Did:</b> '+(l.what_i_did||"—")+"<br><b>Learned:</b> "+(l.what_i_learned||"—")+(l.mentor_note?"<br><b>Mentor:</b> "+l.mentor_note:"")+"</div></div>";
   }).join(""):'<div style="font-size:0.78rem;color:var(--mist);padding:10px 0">No learning logs yet.</div>';
   document.getElementById("detail-content").innerHTML=
-    '<button class="back-btn" onclick="showScreen('home')">← Back</button>'
+    '<button class="back-btn" onclick="showScreen(&apos;home&apos;)">← Back</button>'
     +'<div class="detail-hero">'+photo
     +'<div class="detail-name">'+i.full_name+"</div>"
     +'<div class="detail-college">'+(i.college||"")+(i.academic_year?" · "+i.academic_year:"")+"</div>"
@@ -606,11 +606,11 @@ async function openDetail(id){
     +'<div class="status-flow"><div class="status-flow-title">Application Journey</div>'
     +'<div class="status-steps">'+stepsHTML+"</div>"
     +'<div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">'+sbtn+"</div></div>"
-    +(draft&&i.status==="shortlisted"?'<div class="action-card"><div class="action-title">⚡ Assign Posting & Mentor</div><button class="btn btn-gold" onclick="openAssignModal(''+id+'')">Complete Assignment →</button></div>':"")
+    +(draft&&i.status==="shortlisted"?'<div class="action-card"><div class="action-title">⚡ Assign Posting & Mentor</div><button class="btn btn-gold" onclick="openAssignModal(&apos;"+id+"&apos;)">Complete Assignment →</button></div>':"")
     +'<div class="milestone-card">'
     +'<div class="milestone-row"><div class="m-icon '+(ch.profile?"done":"pending")+'">🎓</div><div class="m-text"><div class="m-label">Intern Profile</div><div class="m-sub">'+(i.college||"Academic details")+"</div></div></div>"
     +'<div class="milestone-row"><div class="m-icon '+(ch.mentor?"done":"pending")+'">👨‍⚕️</div><div class="m-text"><div class="m-label">Mentor & Posting</div><div class="m-sub">'+(i.mentor_name||"Not assigned")+"</div></div></div>"
-    +'<div class="milestone-row"><div class="m-icon '+(ch.attendance?"done":"pending")+'">📋</div><div class="m-text"><div class="m-label">Attendance</div><div class="m-sub">'+(ch.attendance?"Recorded":"Not verified")+'</div></div><button class="toggle-btn '+(ch.attendance?"unmark":"mark")+'" onclick="event.stopPropagation();toggleAtt(''+id+'','+ch.attendance+')">'+( ch.attendance?"Unmark":"Mark ✓")+"</button></div>"
+    +'<div class="milestone-row"><div class="m-icon '+(ch.attendance?"done":"pending")+'">📋</div><div class="m-text"><div class="m-label">Attendance</div><div class="m-sub">'+(ch.attendance?"Recorded":"Not verified")+'</div></div><button class="toggle-btn '+(ch.attendance?"unmark":"mark")+'" onclick="event.stopPropagation();toggleAtt(&apos;"+id+"&apos;,"+ch.attendance+")">'+( ch.attendance?"Unmark":"Mark ✓")+"</button></div>"
     +reportRow+certRow+"</div>"
     +'<div class="info-grid">'
     +'<div class="info-card"><div class="info-label">Mentor</div><div class="info-val">'+(i.mentor_name||"—")+'</div><div style="font-size:0.7rem;color:var(--mist)">'+(i.mentor_designation||"")+"</div></div>"
@@ -618,9 +618,9 @@ async function openDetail(id){
     +"</div>"
     +(i.objective?'<div class="info-card" style="margin-bottom:13px"><div class="info-label">Objective</div><div style="font-size:0.84rem;line-height:1.65;margin-top:4px">'+i.objective+"</div></div>":"")
     +'<div class="info-card" style="margin-bottom:13px"><div class="info-label">Weekly Learning Logs</div>'+logsHTML+"</div>"
-    +'<div class="btn-row"><button class="btn btn-secondary btn-sm" onclick="editIntern(''+id+'')">✏ Edit</button>'
-    +' <button class="btn btn-danger btn-sm" onclick="deleteIntern(''+id+'')">🗑 Delete</button>'
-    +' <button class="btn btn-ghost btn-sm" onclick="markErasure(''+id+'')" title="DPDP erasure request">🔒 Erasure</button></div>'
+    +'<div class="btn-row"><button class="btn btn-secondary btn-sm" onclick="editIntern(&apos;"+id+"&apos;)">✏ Edit</button>'
+    +' <button class="btn btn-danger btn-sm" onclick="deleteIntern(&apos;"+id+"&apos;)">🗑 Delete</button>'
+    +' <button class="btn btn-ghost btn-sm" onclick="markErasure(&apos;"+id+"&apos;)" title="DPDP erasure request">🔒 Erasure</button></div>'
     +'<div class="dpdp-footer">3-year DPDP retention · <a href="privacy.html">Privacy Notice</a></div>';
 }
 
@@ -737,7 +737,7 @@ function renderMentors(){
       +'<div style="font-size:0.72rem;color:var(--mist)">'+(m.designation||"")+(m.department?" · "+m.department:"")+"</div>"
       +(m.email?'<div style="font-size:0.66rem;color:var(--teal)">'+m.email+"</div>":"")
       +'<div style="font-size:0.63rem;color:var(--teal)">'+count+' intern'+(count!==1?"s":"")+" assigned</div>"
-      +"</div>"+'<button class="toggle-btn unmark" onclick="deleteMentor(''+m.id+'')">✕</button></div>';
+      +"</div>"+'<button class="toggle-btn unmark" onclick="deleteMentor(&apos;"+m.id+"&apos;)">✕</button></div>';
   }).join("");
 }
 function openMentorModal(){document.getElementById("mentor-modal").classList.add("show");}
