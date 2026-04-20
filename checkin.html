@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="theme-color" content="#079897"/>
+<title>InternPulse &mdash; Check In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --teal:#079897;--teal-deep:#045f5e;--teal-mid:#0ab8b7;
+  --teal-glow:rgba(7,152,151,0.18);--teal-pale:#e8f8f8;
+  --green:#16a34a;--green-soft:#dcfce7;
+  --amber:#d97706;--red:#dc2626;--red-soft:#fee2e2;
+  --ink:#0a1f1f;--slate:#4a7070;--mist:#8eacac;
+  --border:#cce3e3;--bg:#f2fafa;--white:#fff;
+  --shadow:0 4px 24px rgba(7,152,151,0.14);
+  --shadow-lg:0 12px 48px rgba(7,152,151,0.20);
+  --r:18px;--r-sm:11px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:linear-gradient(135deg,var(--teal-deep),var(--teal));min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.card{background:var(--white);border-radius:var(--r);padding:28px 24px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);}
+.logo-row{display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.logo-pulse{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--teal-deep),var(--teal));display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 16px var(--teal-glow);}
+.title{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--ink);text-align:center;margin-bottom:4px;}
+.sub{font-size:0.72rem;color:var(--mist);text-align:center;margin-bottom:22px;line-height:1.5;}
+
+/* STATE PANELS */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* LOADING */
+.spinner{width:40px;height:40px;border:3px solid var(--teal-pale);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;margin:20px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{text-align:center;font-size:0.82rem;color:var(--slate);margin-top:10px;}
+
+/* FORM */
+.form-label{font-size:0.67rem;font-weight:600;color:var(--slate);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.05em;}
+.form-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--ink);outline:none;transition:border-color 0.2s,box-shadow 0.2s;margin-bottom:4px;}
+.form-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-glow);}
+.field-err{font-size:0.65rem;color:var(--red);margin-bottom:10px;display:none;}
+.field-err.show{display:block;}
+.hint{font-size:0.68rem;color:var(--mist);margin-bottom:16px;line-height:1.5;}
+.btn{width:100%;padding:13px;border:none;border-radius:var(--r-sm);font-family:'Outfit',sans-serif;font-weight:600;font-size:0.9rem;cursor:pointer;transition:all 0.2s;}
+.btn-primary{background:linear-gradient(135deg,var(--teal-deep),var(--teal));color:#fff;box-shadow:0 4px 16px var(--teal-glow);}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+/* SUCCESS */
+.success-icon{font-size:3.5rem;text-align:center;margin-bottom:14px;}
+.success-name{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--ink);text-align:center;margin-bottom:6px;}
+.success-detail{font-size:0.8rem;color:var(--slate);text-align:center;margin-bottom:16px;line-height:1.6;}
+.factor-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--r-sm);margin-bottom:8px;font-size:0.8rem;}
+.factor-row.done{background:var(--green-soft);color:var(--green);}
+.factor-row.pending{background:#fef3c7;color:var(--amber);}
+.factor-icon{font-size:1.1rem;flex-shrink:0;}
+.factor-txt b{display:block;font-size:0.82rem;}
+.factor-txt span{font-size:0.67rem;opacity:0.8;}
+
+/* ERROR */
+.error-icon{font-size:3rem;text-align:center;margin-bottom:12px;}
+.error-msg{font-size:0.875rem;color:var(--red);text-align:center;margin-bottom:8px;font-weight:500;}
+.error-sub{font-size:0.75rem;color:var(--slate);text-align:center;line-height:1.6;}
+
+.footer{font-size:0.6rem;color:var(--mist);text-align:center;margin-top:20px;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-row"><div class="logo-pulse">&#128203;</div></div>
+  <div class="title">InternPulse</div>
+  <div class="sub">Attendance Check-In<br/>Yenepoya Specialty Hospital &middot; Mangalore</div>
+
+  <!-- LOADING STATE -->
+  <div class="panel active" id="panel-loading">
+    <div class="spinner"></div>
+    <div class="loading-txt">Validating QR code&hellip;</div>
+  </div>
+
+  <!-- INVALID TOKEN STATE -->
+  <div class="panel" id="panel-invalid">
+    <div class="error-icon">&#9940;</div>
+    <div class="error-msg">QR Code Expired or Invalid</div>
+    <div class="error-sub">This QR code is no longer valid.<br/>Ask your coordinator to generate a new one for today.<br/><br/>QR codes are valid for <b>30 minutes</b> from generation.</div>
+  </div>
+
+  <!-- INTERN LOOKUP FORM -->
+  <div class="panel" id="panel-form">
+    <div style="background:var(--teal-pale);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:18px;font-size:0.75rem;color:var(--teal-deep);display:flex;align-items:center;gap:8px">
+      <span style="font-size:1rem">&#9989;</span>
+      <span>QR code valid &mdash; <span id="expiry-display"></span></span>
+    </div>
+    <label class="form-label">Your Email Address</label>
+    <input class="form-input" id="intern-email" type="email" placeholder="your@email.com" autocomplete="email"/>
+    <div class="field-err" id="err-email">Please enter a valid email address</div>
+    <div class="hint">Enter the email you used when applying. We'll use this to record your attendance.</div>
+    <button class="btn btn-primary" id="checkin-btn" onclick="doCheckin()">&#10003; Mark My Attendance</button>
+  </div>
+
+  <!-- ALREADY CHECKED IN -->
+  <div class="panel" id="panel-already">
+    <div class="success-icon">&#128076;</div>
+    <div class="success-name" id="already-name"></div>
+    <div class="success-detail">You have already checked in today.<br/>Your Factor 1 attendance is recorded.</div>
+    <div class="factor-row done">
+      <div class="factor-icon">&#128241;</div>
+      <div class="factor-txt"><b>Factor 1 &mdash; Your Scan &#10003;</b><span>Recorded today</span></div>
+    </div>
+    <div class="factor-row pending" id="already-f2">
+      <div class="factor-icon">&#9203;</div>
+      <div class="factor-txt"><b>Factor 2 &mdash; Mentor Confirmation</b><span>Pending &mdash; your mentor will confirm</span></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS STATE -->
+  <div class="panel" id="panel-success">
+    <div class="success-icon">&#127881;</div>
+    <div class="success-name" id="success-name">Good morning!</div>
+    <div class="success-detail" id="success-detail">Your attendance has been recorded for today.</div>
+    <div class="factor-row done">
+      <div class="factor-icon">&#128241;</div>
+      <div class="factor-txt"><b>Factor 1 &mdash; Your Scan &#10003;</b><span>Recorded at <span id="checkin-time"></span></span></div>
+    </div>
+    <div class="factor-row pending">
+      <div class="factor-icon">&#128104;&#8205;&#9877;&#65039;</div>
+      <div class="factor-txt"><b>Factor 2 &mdash; Mentor Confirmation</b><span>Your mentor will confirm on their portal</span></div>
+    </div>
+  </div>
+
+  <!-- NOT FOUND STATE -->
+  <div class="panel" id="panel-notfound">
+    <div class="error-icon">&#128274;</div>
+    <div class="error-msg">Intern Not Found</div>
+    <div class="error-sub" id="notfound-msg">No active intern found with that email.<br/>Please check your email and try again.<br/><br/>If the problem persists, contact the coordinator at<br/><b>diroff@yenepoyahospital.com</b></div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="showPanel('panel-form')">Try Again</button>
+  </div>
+
+  <div class="footer">InternPulse v1.0 &middot; Yenepoya Specialty Hospital &middot; Mangalore<br/>NABH Accredited &middot; DPDP Act 2023 Compliant</div>
+</div>
+
+<script>
+var SURL = "https://qkyunliqrsgtrhuoynnn.supabase.co";
+var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXVubGlxcnNndHJodW95bm5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTExNjUsImV4cCI6MjA4OTQ4NzE2NX0.w3XphRDVgud5xwH6xgKNiSdT3jx2YnnMYnKafQ-J244";
+var db = supabase.createClient(SURL, SKEY);
+var validSession = null;
+var today = new Date().toISOString().split("T")[0];
+var expiryTimer = null;
+
+function showPanel(id) {
+  document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+}
+
+function startExpiryCountdown(expDate) {
+  function tick() {
+    var diff = new Date(expDate) - new Date();
+    if (diff <= 0) {
+      document.getElementById("expiry-display").textContent = "expired";
+      clearInterval(expiryTimer);
+      showPanel("panel-invalid");
+      return;
+    }
+    var m = Math.floor(diff / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    document.getElementById("expiry-display").textContent = "expires in " + m + "m " + s + "s";
+  }
+  tick();
+  expiryTimer = setInterval(tick, 1000);
+}
+
+async function validateToken() {
+  var params = new URLSearchParams(window.location.search);
+  var token = params.get("token");
+  if (!token) { showPanel("panel-invalid"); return; }
+
+  var r = await db.from("qr_sessions").select("*").eq("session_token", token).single();
+  if (r.error || !r.data) { showPanel("panel-invalid"); return; }
+
+  var sess = r.data;
+  var exp = new Date(sess.expires_at);
+  if (exp < new Date()) { showPanel("panel-invalid"); return; }
+
+  validSession = sess;
+  startExpiryCountdown(exp);
+  showPanel("panel-form");
+}
+
+async function doCheckin() {
+  var email = document.getElementById("intern-email").value.trim().toLowerCase();
+  var errEl = document.getElementById("err-email");
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.classList.add("show"); return;
+  }
+  errEl.classList.remove("show");
+
+  var btn = document.getElementById("checkin-btn");
+  btn.disabled = true; btn.textContent = "Checking in\u2026";
+
+  // Find active intern by email
+  var r = await db.from("interns")
+    .select("id,full_name,mentor_name,posting_location,status")
+    .eq("email", email)
+    .in("status", ["active", "shortlisted"])
+    .single();
+
+  if (r.error || !r.data) {
+    btn.disabled = false; btn.textContent = "\u2713 Mark My Attendance";
+    showPanel("panel-notfound");
+    return;
+  }
+
+  var intern = r.data;
+
+  // Check if already checked in today
+  var existing = await db.from("attendance")
+    .select("*")
+    .eq("intern_id", intern.id)
+    .eq("date", today)
+    .single();
+
+  if (existing.data) {
+    btn.disabled = false; btn.textContent = "\u2713 Mark My Attendance";
+    document.getElementById("already-name").textContent = intern.full_name;
+    var f2done = existing.data.factor2_confirmed;
+    var f2el = document.getElementById("already-f2");
+    if (f2done) {
+      f2el.className = "factor-row done";
+      f2el.innerHTML = '<div class="factor-icon">&#10003;</div><div class="factor-txt"><b>Factor 2 &mdash; Mentor Confirmed &#10003;</b><span>Fully verified</span></div>';
+    }
+    showPanel("panel-already");
+    return;
+  }
+
+  // Insert attendance record (Factor 1)
+  var ins = await db.from("attendance").insert({
+    intern_id: intern.id,
+    date: today,
+    present: true,
+    factor2_confirmed: false
+  });
+
+  btn.disabled = false; btn.textContent = "\u2713 Mark My Attendance";
+
+  if (ins.error) {
+    showPanel("panel-notfound");
+    document.getElementById("notfound-msg").textContent = "Check-in failed: " + ins.error.message + ". Contact the coordinator.";
+    return;
+  }
+
+  // Success
+  var now = new Date();
+  var timeStr = now.toLocaleTimeString("en-IN", {hour: "2-digit", minute: "2-digit"});
+  document.getElementById("success-name").textContent = "Good " + greeting() + ", " + intern.full_name + "!";
+  document.getElementById("success-detail").textContent =
+    "Attendance recorded for " + today + " at " + intern.posting_location + ".";
+  document.getElementById("checkin-time").textContent = timeStr;
+  showPanel("panel-success");
+}
+
+function greeting() {
+  var h = new Date().getHours();
+  if (h < 12) return "morning";
+  if (h < 17) return "afternoon";
+  return "evening";
+}
+
+// Run on load
+validateToken();
+</script>
+</body>
+</html>
