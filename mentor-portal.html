@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="theme-color" content="#079897"/>
+<title>InternPulse &mdash; Mentor Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --teal:#079897;--teal-deep:#045f5e;--teal-mid:#0ab8b7;
+  --teal-glow:rgba(7,152,151,0.18);--teal-pale:#e8f8f8;
+  --gold:#c9a84c;
+  --green:#16a34a;--green-soft:#dcfce7;
+  --amber:#d97706;--red:#dc2626;--red-soft:#fee2e2;
+  --ink:#0a1f1f;--ink2:#1e3a3a;--slate:#4a7070;--mist:#8eacac;
+  --border:#cce3e3;--bg:#f2fafa;--white:#fff;
+  --shadow-sm:0 2px 12px rgba(7,152,151,0.10);
+  --shadow:0 4px 24px rgba(7,152,151,0.14);
+  --shadow-lg:0 12px 48px rgba(7,152,151,0.20);
+  --r:18px;--r-sm:11px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;padding-bottom:40px;}
+
+.header{background:linear-gradient(135deg,var(--teal-deep),var(--teal));padding:20px 16px 24px;color:#fff;position:relative;overflow:hidden;}
+.header::after{content:'';position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.header-top{display:flex;align-items:center;gap:10px;margin-bottom:14px;position:relative;z-index:1;}
+.header-icon{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid rgba(255,255,255,0.25);}
+.header-brand{font-size:0.72rem;color:rgba(255,255,255,0.75);}
+.mentor-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:#fff;position:relative;z-index:1;}
+.mentor-role{font-size:0.75rem;color:rgba(255,255,255,0.72);margin-top:2px;position:relative;z-index:1;}
+.date-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:0.68rem;color:rgba(255,255,255,0.88);margin-top:10px;position:relative;z-index:1;}
+
+.wrap{max-width:520px;margin:0 auto;padding:16px;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.stat-card{background:var(--white);border-radius:var(--r-sm);border:1px solid var(--border);padding:12px;text-align:center;box-shadow:var(--shadow-sm);}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--teal-deep);}
+.stat-l{font-size:0.58rem;color:var(--mist);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
+
+/* TODAY SECTION */
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.section-title::before{content:'';width:3px;height:16px;background:var(--teal);border-radius:2px;display:block;flex-shrink:0;}
+
+/* INTERN ATTENDANCE CARD */
+.att-card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:transform 0.15s;}
+.att-card:hover{transform:translateY(-1px);}
+.att-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.att-avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--teal-deep),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:#fff;flex-shrink:0;}
+.att-photo{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--teal);flex-shrink:0;}
+.att-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--ink);}
+.att-meta{font-size:0.68rem;color:var(--mist);margin-top:2px;}
+.att-posting{display:inline-flex;align-items:center;gap:4px;background:var(--teal-pale);color:var(--teal-deep);font-size:0.62rem;font-weight:600;padding:2px 8px;border-radius:20px;margin-top:4px;}
+
+/* FACTOR BADGES */
+.factors{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.factor-badge{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;font-size:0.68rem;font-weight:600;}
+.factor-badge.done{background:var(--green-soft);color:var(--green);}
+.factor-badge.pending{background:#fef3c7;color:var(--amber);}
+.factor-badge.wait{background:#f3f4f6;color:#6b7280;}
+
+/* CONFIRM BUTTON */
+.confirm-btn{width:100%;padding:11px;border:none;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--teal-deep),var(--teal));color:#fff;font-family:'Outfit',sans-serif;font-weight:600;font-size:0.85rem;cursor:pointer;box-shadow:0 3px 12px var(--teal-glow);transition:all 0.2s;}
+.confirm-btn:hover{transform:translateY(-1px);}
+.confirm-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.confirm-btn.confirmed{background:var(--green);box-shadow:0 3px 12px rgba(22,163,74,0.25);}
+
+/* ALL INTERNS SECTION */
+.intern-row{background:var(--white);border-radius:var(--r-sm);border:1px solid var(--border);padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;}
+.intern-row-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--teal-deep),var(--teal));display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-weight:600;color:#fff;flex-shrink:0;}
+.intern-row-ph{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--border);flex-shrink:0;}
+.status-pill{font-size:0.6rem;font-weight:600;padding:2px 8px;border-radius:10px;text-transform:uppercase;}
+.pill-active{background:var(--green-soft);color:var(--green);}
+.pill-shortlisted{background:#fef3c7;color:var(--amber);}
+
+/* LOADING */
+.spinner{width:36px;height:36px;border:3px solid var(--teal-pale);border-top-color:var(--teal);border-radius:50%;animation:spin 0.8s linear infinite;margin:30px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{text-align:center;font-size:0.8rem;color:var(--slate);margin-top:8px;}
+
+/* ERROR */
+.error-card{background:var(--red-soft);border:1px solid #fca5a5;border-radius:var(--r);padding:20px;text-align:center;}
+.error-card h3{color:var(--red);font-size:0.95rem;margin-bottom:6px;}
+.error-card p{font-size:0.78rem;color:#7f1d1d;line-height:1.6;}
+
+/* EMPTY */
+.empty{text-align:center;padding:32px 20px;color:var(--mist);}
+.empty-art{font-size:2.8rem;margin-bottom:10px;opacity:0.4;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink2);color:#fff;padding:10px 20px;border-radius:30px;font-size:0.76rem;z-index:999;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.success{background:var(--teal);}
+.toast.error{background:var(--red);}
+
+/* TAB BAR */
+.tab-bar{display:flex;background:var(--white);border-radius:var(--r-sm);border:1px solid var(--border);padding:4px;margin-bottom:18px;box-shadow:var(--shadow-sm);gap:4px;}
+.tab-btn{flex:1;padding:8px 4px;border:none;background:none;border-radius:8px;font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:500;color:var(--mist);cursor:pointer;transition:all 0.2s;}
+.tab-btn.active{background:var(--teal);color:#fff;}
+
+.footer{font-size:0.6rem;color:var(--mist);text-align:center;margin-top:24px;line-height:1.8;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-icon">&#128104;&#8205;&#9877;&#65039;</div>
+    <div class="header-brand">InternPulse &middot; Mentor Portal</div>
+  </div>
+  <div class="mentor-name" id="mentor-name">Loading&hellip;</div>
+  <div class="mentor-role" id="mentor-role"></div>
+  <div class="date-chip">&#128197; <span id="today-date"></span></div>
+</div>
+
+<div class="wrap">
+
+  <!-- LOADING -->
+  <div id="loading-section">
+    <div class="spinner"></div>
+    <div class="loading-txt">Loading your portal&hellip;</div>
+  </div>
+
+  <!-- ERROR -->
+  <div id="error-section" style="display:none">
+    <div class="error-card">
+      <h3>Mentor Not Found</h3>
+      <p>This portal link is invalid or the mentor record has been removed.<br/><br/>Contact the coordinator at<br/><b>diroff@yenepoyahospital.com</b></p>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="main-content" style="display:none">
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-n" id="stat-total">0</div><div class="stat-l">My Interns</div></div>
+      <div class="stat-card"><div class="stat-n" id="stat-today">0</div><div class="stat-l">Present Today</div></div>
+      <div class="stat-card"><div class="stat-n" id="stat-confirmed">0</div><div class="stat-l">Confirmed</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-today" onclick="switchTab('today')">Today&#8217;s Attendance</button>
+      <button class="tab-btn" id="tab-all" onclick="switchTab('all')">All My Interns</button>
+    </div>
+
+    <!-- TODAY TAB -->
+    <div id="tab-content-today">
+      <div class="section-title">Confirm Attendance &mdash; Factor 2</div>
+      <div style="font-size:0.72rem;color:var(--mist);margin-bottom:14px;line-height:1.6;">
+        Interns who scanned the QR today (Factor 1) are listed below.<br/>
+        Tap <b>Confirm Presence</b> to verify you saw them in person (Factor 2).
+      </div>
+      <div id="today-list"></div>
+    </div>
+
+    <!-- ALL INTERNS TAB -->
+    <div id="tab-content-all" style="display:none">
+      <div class="section-title">All Assigned Interns</div>
+      <div id="all-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SURL = "https://qkyunliqrsgtrhuoynnn.supabase.co";
+var SKEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFreXVubGlxcnNndHJodW95bm5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5MTExNjUsImV4cCI6MjA4OTQ4NzE2NX0.w3XphRDVgud5xwH6xgKNiSdT3jx2YnnMYnKafQ-J244";
+var db = supabase.createClient(SURL, SKEY);
+
+var mentorData = null;
+var myInterns = [];
+var todayAtt = [];
+var today = new Date().toISOString().split("T")[0];
+
+// Set today's date display
+document.getElementById("today-date").textContent = new Date().toLocaleDateString("en-IN", {
+  weekday: "long", day: "numeric", month: "long", year: "numeric"
+});
+
+function ini(n) {
+  return (n || "?").split(" ").map(function(w) { return w[0] || ""; }).slice(0, 2).join("").toUpperCase();
+}
+
+function showToast(msg, type) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.className = "toast show " + (type || "");
+  setTimeout(function() { t.className = "toast"; }, 2800);
+}
+
+function switchTab(tab) {
+  document.getElementById("tab-today").classList.toggle("active", tab === "today");
+  document.getElementById("tab-all").classList.toggle("active", tab === "all");
+  document.getElementById("tab-content-today").style.display = tab === "today" ? "block" : "none";
+  document.getElementById("tab-content-all").style.display = tab === "all" ? "block" : "none";
+}
+
+async function loadPortal() {
+  var params = new URLSearchParams(window.location.search);
+  var mentorId = params.get("mentor");
+  if (!mentorId) { showError(); return; }
+
+  // Load mentor record
+  var mr = await db.from("mentors").select("*").eq("id", mentorId).single();
+  if (mr.error || !mr.data) { showError(); return; }
+  mentorData = mr.data;
+
+  document.getElementById("mentor-name").textContent = mentorData.name;
+  document.getElementById("mentor-role").textContent =
+    (mentorData.designation || "") + (mentorData.department ? " \u00B7 " + mentorData.department : "");
+
+  // Load my interns
+  var ir = await db.from("interns").select("*")
+    .ilike("mentor_name", mentorData.name)
+    .in("status", ["active", "shortlisted", "completed"]);
+  myInterns = ir.data || [];
+
+  // Load today's attendance for my interns
+  if (myInterns.length) {
+    var ids = myInterns.map(function(i) { return i.id; });
+    var ar = await db.from("attendance").select("*")
+      .in("intern_id", ids).eq("date", today);
+    todayAtt = ar.data || [];
+  }
+
+  updateStats();
+  renderTodayList();
+  renderAllList();
+
+  document.getElementById("loading-section").style.display = "none";
+  document.getElementById("main-content").style.display = "block";
+}
+
+function updateStats() {
+  var presentToday = todayAtt.length;
+  var confirmed = todayAtt.filter(function(a) { return a.factor2_confirmed; }).length;
+  document.getElementById("stat-total").textContent = myInterns.filter(function(i) { return i.status === "active"; }).length;
+  document.getElementById("stat-today").textContent = presentToday;
+  document.getElementById("stat-confirmed").textContent = confirmed;
+}
+
+function renderTodayList() {
+  var c = document.getElementById("today-list");
+  // Interns who have checked in today
+  var checked = todayAtt.map(function(att) {
+    return { att: att, intern: myInterns.find(function(i) { return i.id === att.intern_id; }) };
+  }).filter(function(x) { return x.intern; });
+
+  if (!checked.length) {
+    c.innerHTML = '<div class="empty"><div class="empty-art">&#128203;</div>' +
+      '<div style="font-size:0.875rem;font-weight:500;color:var(--ink)">No check-ins yet today</div>' +
+      '<div style="font-size:0.75rem;margin-top:6px">Interns who scan the QR code will appear here.</div></div>';
+    return;
+  }
+
+  c.innerHTML = checked.map(function(x) {
+    var i = x.intern; var att = x.att;
+    var f2done = att.factor2_confirmed;
+    var av = i.photo_url ?
+      '<img class="att-photo" src="' + i.photo_url + '" alt="Photo" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"/>' +
+      '<div class="att-avatar" style="display:none">' + ini(i.full_name) + '</div>' :
+      '<div class="att-avatar">' + ini(i.full_name) + '</div>';
+
+    return '<div class="att-card" id="attcard-' + att.id + '">' +
+      '<div class="att-card-top">' + av +
+      '<div style="flex:1;min-width:0">' +
+      '<div class="att-name">' + i.full_name + '</div>' +
+      '<div class="att-meta">' + (i.department || "") + ' &middot; ' + (i.college || "") + '</div>' +
+      '<div class="att-posting">&#128205; ' + (i.posting_location || "No posting") + '</div>' +
+      '</div></div>' +
+      '<div class="factors">' +
+      '<div class="factor-badge done">&#128241; Factor 1 &#10003;</div>' +
+      '<div class="factor-badge ' + (f2done ? "done" : "pending") + '" id="f2badge-' + att.id + '">' +
+      (f2done ? '&#128104;&#8205;&#9877;&#65039; Factor 2 &#10003;' : '&#9203; Factor 2 Pending') +
+      '</div></div>' +
+      '<button class="confirm-btn' + (f2done ? " confirmed" : "") + '" id="confbtn-' + att.id + '"' +
+      (f2done ? ' disabled' : ' onclick="confirmF2(\'' + att.id + '\',\'' + i.id + '\')"') + '>' +
+      (f2done ? '&#10003; Attendance Fully Verified' : '&#128104;&#8205;&#9877;&#65039; Confirm Presence (Factor 2)') +
+      '</button></div>';
+  }).join("");
+}
+
+async function confirmF2(attId, internId) {
+  var btn = document.getElementById("confbtn-" + attId);
+  if (btn) { btn.disabled = true; btn.textContent = "Confirming\u2026"; }
+
+  var r = await db.from("attendance").update({
+    factor2_confirmed: true,
+    factor2_confirmed_at: new Date().toISOString(),
+    factor2_confirmed_by: mentorData ? mentorData.name : "Mentor"
+  }).eq("id", attId);
+
+  if (r.error) {
+    if (btn) { btn.disabled = false; btn.textContent = "&#128104;&#8205;&#9877;&#65039; Confirm Presence (Factor 2)"; }
+    showToast("Error: " + r.error.message, "error");
+    return;
+  }
+
+  // Update UI
+  if (btn) {
+    btn.textContent = "\u2713 Attendance Fully Verified";
+    btn.classList.add("confirmed");
+  }
+  var badge = document.getElementById("f2badge-" + attId);
+  if (badge) {
+    badge.className = "factor-badge done";
+    badge.innerHTML = "&#128104;&#8205;&#9877;&#65039; Factor 2 &#10003;";
+  }
+
+  // Update local data
+  var att = todayAtt.find(function(a) { return a.id === attId; });
+  if (att) att.factor2_confirmed = true;
+  updateStats();
+
+  showToast("Attendance confirmed \u2713", "success");
+}
+
+function renderAllList() {
+  var c = document.getElementById("all-list");
+  var active = myInterns.filter(function(i) { return i.status === "active"; });
+  if (!active.length) {
+    c.innerHTML = '<div class="empty"><div class="empty-art">&#127891;</div><div style="font-size:0.875rem">No active interns assigned yet</div></div>';
+    return;
+  }
+  c.innerHTML = active.map(function(i) {
+    var todayRec = todayAtt.find(function(a) { return a.intern_id === i.id; });
+    var f1 = !!todayRec; var f2 = todayRec && todayRec.factor2_confirmed;
+    var attStatus = f2 ? '<span class="factor-badge done" style="font-size:0.6rem">&#9989; Verified</span>' :
+      f1 ? '<span class="factor-badge pending" style="font-size:0.6rem">&#9203; F2 Needed</span>' :
+      '<span class="factor-badge wait" style="font-size:0.6rem">&#128203; Not scanned</span>';
+    var av = i.photo_url ?
+      '<img class="intern-row-ph" src="' + i.photo_url + '" alt="Photo" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"/>' +
+      '<div class="intern-row-av" style="display:none">' + ini(i.full_name) + '</div>' :
+      '<div class="intern-row-av">' + ini(i.full_name) + '</div>';
+    return '<div class="intern-row">' + av +
+      '<div style="flex:1;min-width:0">' +
+      '<div style="font-weight:600;font-size:0.9rem">' + i.full_name + '</div>' +
+      '<div style="font-size:0.68rem;color:var(--mist)">' + (i.department || "") + ' &middot; ' + (i.college || "") + '</div>' +
+      '<div style="font-size:0.65rem;color:var(--teal-deep);margin-top:2px">&#128205; ' + (i.posting_location || "No posting") + '</div>' +
+      '<div style="margin-top:5px">' + attStatus + '</div>' +
+      '</div></div>';
+  }).join("");
+}
+
+function showError() {
+  document.getElementById("loading-section").style.display = "none";
+  document.getElementById("error-section").style.display = "block";
+}
+
+// Init
+loadPortal();
+</script>
+
+<div class="footer" style="padding:0 16px">
+  InternPulse v1.0 &middot; Yenepoya Specialty Hospital &middot; Mangalore<br/>
+  This is your personal portal. Do not share this link.
+</div>
+
+</body>
+</html>
