@@ -16,6 +16,15 @@
 <style>
 :root{--t:#079897;--td:#045f5e;--tm:#0ab8b7;--g:rgba(7,152,151,0.15);--p:#e8f8f8;--ink:#0a1f1f;--ms:#8eacac;--bd:#cce3e3;--bg:#f0fafa;--wh:#fff;--rd:#dc2626;--rs:#fee2e2;--gn:#16a34a;--gs:#dcfce7;--am:#d97706;--r:18px;--r2:12px;}
 *{box-sizing:border-box;margin:0;padding:0;}
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/YSH-Intern/sw.js')
+        .then(function(reg) { console.log('[InternPulse] SW:', reg.scope); })
+        .catch(function(err) { console.warn('[InternPulse] SW failed:', err); });
+    });
+  }
+</script>
 body{font-family:'Outfit',sans-serif;background:linear-gradient(160deg,#f0fafa,#e6f8f8,#f4fffe);color:var(--ink);min-height:100vh;}
 .lw{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#033d3c,#045f5e,#079897,#0ab8b7,#4ecdc4);}
 .lcard{background:var(--wh);border-radius:24px;padding:32px 28px;width:100%;max-width:400px;box-shadow:0 24px 80px rgba(0,0,0,0.22),0 8px 32px rgba(7,152,151,0.3);border-top:3px solid var(--t);}
