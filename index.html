@@ -274,8 +274,9 @@ body{font-family:'Outfit',sans-serif;background:linear-gradient(160deg,#f0fafa,#
     </div>
     <div class='fg'><label class='fl'>End Date <span style='font-size:0.6rem;color:var(--ms);font-weight:400;text-transform:none'>(auto-calculated)</span></label><input class='fi' type='date' id='fen' readonly style='background:#f8fdfd;color:var(--ms);cursor:not-allowed'/></div>
     <div class='fr2'><div class='fg'><label class='fl'>Mentor Name</label><input class='fi' id='fmen'/></div><div class='fg'><label class='fl'>Designation</label><input class='fi' id='fmd'/></div></div>
-    <div class='fsec'>Objective</div>
-    <div class='fg'><textarea class='ft' id='fo' placeholder='Learning goals…'></textarea></div>
+    <div class='fsec'>Objective & Work</div>
+    <div class='fg'><label class='fl'>Objective <span style='font-size:0.6rem;color:var(--ms);font-weight:400'>(intern's learning goal)</span></label><textarea class='ft' id='fo' placeholder='What the intern aims to learn…' style='min-height:60px'></textarea></div>
+    <div class='fg'><label class='fl'>Work Assigned <span style='font-size:0.6rem;color:var(--ms);font-weight:400'>(tasks by coordinator)</span></label><textarea class='ft' id='fwa' style='min-height:60px' placeholder='Tasks, procedures and responsibilities…'></textarea></div>
     <button class='btn bp' id='abtn' onclick='subInt()'>✦ Register Intern</button>
     <div style='height:10px'></div>
   </div>
@@ -313,7 +314,8 @@ body{font-family:'Outfit',sans-serif;background:linear-gradient(160deg,#f0fafa,#
   </div>
   <div class='fg'><label class='fl'>End Date <span style="font-size:0.6rem;color:var(--ms);font-weight:400">(auto-calculated)</span></label><input class='fi' type='date' id='aen' style='background:#f8fdfd;color:var(--td);font-weight:500' readonly/></div>
   <div class='fr2'><div class='fg'><label class='fl'>Mentor *</label><input class='fi' id='amen'/></div><div class='fg'><label class='fl'>Designation</label><input class='fi' id='amd'/></div></div>
-  <div class='fg'><label class='fl'>Work Assigned</label><textarea class='ft' id='aob' style='min-height:70px' placeholder='Tasks and responsibilities assigned to the intern…'></textarea></div>
+  <div class='fg'><label class='fl'>Objective <span style='font-size:0.6rem;color:var(--ms);font-weight:400'>(intern's learning goal)</span></label><textarea class='ft' id='aob' style='min-height:60px' placeholder='What the intern aims to learn…'></textarea></div>
+  <div class='fg'><label class='fl'>Work Assigned <span style='font-size:0.6rem;color:var(--ms);font-weight:400'>(tasks by coordinator)</span></label><textarea class='ft' id='awa' style='min-height:60px' placeholder='Tasks, procedures and responsibilities assigned…'></textarea></div>
   <div class='br'><button class='btn bs bsm' onclick='closeM("am")'>Cancel</button><button class='btn bg' onclick='subAsgn()'>✦ Activate Intern</button></div>
 </div></div>
 
@@ -553,7 +555,7 @@ async function openDet(id){
     +'<div class="infc"><div class="infl">Mentor</div><div class="infv">'+(i.mentor_name||'—')+'</div><div style="font-size:0.7rem;color:var(--ms)">'+(i.mentor_designation||'')+'</div></div>'
     +'<div class="infc"><div class="infl">Contact</div><div class="infv" style="font-size:0.82rem">'+(i.phone||'—')+'</div><div style="font-size:0.66rem;color:var(--t)">'+(i.email||'')+'</div></div>'
     +'</div>'
-    +(i.objective?'<div class="infc" style="margin-bottom:13px"><div class="infl">Objective</div><div style="font-size:0.84rem;line-height:1.65;margin-top:4px">'+i.objective+'</div></div>':'')
+    +(i.objective||i.work_assigned?'<div class="ig">'+(i.objective?'<div class="infc"><div class="infl">Objective</div><div style="font-size:0.82rem;line-height:1.6;margin-top:4px">'+i.objective+'</div></div>':'')+(i.work_assigned?'<div class="infc"><div class="infl">Work Assigned</div><div style="font-size:0.82rem;line-height:1.6;margin-top:4px">'+i.work_assigned+'</div></div>':'')+'</div>':'')
     +'<div class="infc" style="margin-bottom:13px"><div class="infl">Weekly Learning Logs</div>'+lh+'</div>'
     +'<div class="br"><button class="btn bs bsm" onclick="editInt(\''+id+'\')">✏ Edit</button> '
     +'<button class="btn bd bsm" onclick="delInt(\''+id+'\')">🗑 Delete</button></div>'
@@ -606,6 +608,7 @@ async function subAsgn(){
     mentor_name:men,
     mentor_designation:document.getElementById('amd').value.trim(),
     objective:document.getElementById('aob').value.trim(),
+    work_assigned:document.getElementById('awa').value.trim(),
     status:'active'
   }).eq('id',AID);
   closeM('am');toast('Intern activated ✓','ok');await loadAll();openDet(AID);
@@ -626,6 +629,7 @@ async function subInt(){
     mentor_name:document.getElementById('fmen').value.trim()||null,
     mentor_designation:document.getElementById('fmd').value.trim(),
     objective:document.getElementById('fo').value.trim(),
+    work_assigned:(document.getElementById('fwa')||{value:''}).value.trim()||null,
     status:'active',report_status:'not_submitted'
   });
   if(r.error){toast('Error: '+r.error.message,'er');return;}
@@ -637,7 +641,7 @@ function clrForm(){
 }
 function editInt(id){
   var i=ALL.find(function(x){return x.id===id;});if(!i)return;goScreen('add');
-  var m={fn:i.full_name,fc:i.college,fd:i.department,fy:i.academic_year,fp:i.phone,fe:i.email,fl:i.posting_location,fs:i.posting_start,fen:i.posting_end,fmen:i.mentor_name,fmd:i.mentor_designation,fo:i.objective};
+  var m={fn:i.full_name,fc:i.college,fd:i.department,fy:i.academic_year,fp:i.phone,fe:i.email,fl:i.posting_location,fs:i.posting_start,fen:i.posting_end,fmen:i.mentor_name,fmd:i.mentor_designation,fo:i.objective,fwa:i.work_assigned};
   Object.entries(m).forEach(function(e){var el=document.getElementById(e[0]);if(el)el.value=e[1]||'';});
   var btn=document.getElementById('abtn');btn.textContent='✦ Update Intern';
   btn.onclick=async function(){
