@@ -1,0 +1,25 @@
+{
+  "name": "InternPulse — YSH Admin",
+  "short_name": "InternPulse",
+  "description": "Intern Management Portal · Yenepoya Specialty Hospital, Mangalore",
+  "start_url": "/YSH-Intern/index.html",
+  "scope": "/YSH-Intern/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#033d3c",
+  "theme_color": "#079897",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
